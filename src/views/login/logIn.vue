@@ -470,7 +470,7 @@ export default {
         },
         getCurrentLocationAndSubmit(event) {
             event.preventDefault();
-                let createUser_API = 'http://localhost:3000/users/signup';
+                let createUser_API = 'http://45.93.138.72:3000/users/signup';
                 axios.post(createUser_API, {
                         "username": this.signUp.usernameSign,
                         "phone":this.signUp.phoneNumber,
@@ -488,7 +488,7 @@ export default {
                       localStorage.setItem('contract', response.data.labContract)
                       this.$router.push('/');
                     })
-                    // axios.post('http://localhost:3000/users/login', {
+                    // axios.post('http://45.93.138.72:3000/users/login', {
                     //     username: this.signUp.usernameSign,
                     //     password: this.signUp.passwordSign
                     // }).then(response => {
@@ -514,7 +514,7 @@ export default {
         },
         Login(e) {
             e.preventDefault();
-            axios.post('http://localhost:3000/users/login', {
+            axios.post('http://45.93.138.72:3000/users/login', {
                 username: this.login.usernameLog,
                 password: this.login.passwordLog,
             }).then(response => {

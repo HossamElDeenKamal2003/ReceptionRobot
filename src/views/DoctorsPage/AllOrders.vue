@@ -145,7 +145,7 @@ export default {
         }
         let ApiUrl;
         if (this.filterForSearch == "") {
-            ApiUrl = 'http://localhost:3000/doctors/orders'
+            ApiUrl = 'http://45.93.138.72:3000/doctors/orders'
         }
         // } else {
         //     ApiUrl = 'http://127.0.0.1:8000/api/doctor/all_orders/?status=' + this.filterForSearch

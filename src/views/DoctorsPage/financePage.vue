@@ -153,7 +153,7 @@ export default {
                 return;
             }
             if(this.fetchingData){
-            axios.get('http://localhost:3000/doctors/financial',{
+            axios.get('http://45.93.138.72:3000/doctors/financial',{
                 headers: {
                 'Authorization': 'DEN ' + localStorage.getItem('token')
                 }

@@ -156,7 +156,7 @@ export default {
   fetchData() {
     const role = localStorage.getItem('role');
     if (role === 'LAB') {
-      axios.get('http://localhost:3000/labs/orders', {
+      axios.get('http://45.93.138.72:3000/labs/orders', {
         headers: {
           'Authorization': 'DEN ' + localStorage.getItem('token')
         }
@@ -176,7 +176,7 @@ export default {
     const role = localStorage.getItem('role');
     if (role === 'LAB') {
       const isUnderway = this.filteredOrders.find(order => order.UID === ID).status === 'Underway';
-      axios.patch(`http://localhost:3000/labs/orders/${ID}`, {
+      axios.patch(`http://45.93.138.72:3000/labs/orders/${ID}`, {
         status: isUnderway ? 'Ready' : 'Underway'
       }, {
         headers: {
@@ -195,7 +195,7 @@ export default {
   },
 
   update(id) {
-  axios.patch(`http://localhost:3000/labs/orders/paid/${id}`, {
+  axios.patch(`http://45.93.138.72:3000/labs/orders/paid/${id}`, {
     paid: this.filteredOrders.find(order => order._id === id).paid,
   }, {
     headers: {
@@ -209,7 +209,7 @@ export default {
   });
 },
   markeOrder(id){
-    axios.patch(`http://localhost:3000/labs/orders/${id}`,{},{
+    axios.patch(`http://45.93.138.72:3000/labs/orders/${id}`,{},{
       headers: {
             'Authorization': 'DEN ' + localStorage.getItem('token')
         }
@@ -220,7 +220,7 @@ export default {
   const isSubscribed = localStorage.getItem('delSub') === 'true';
   const role = localStorage.getItem('role');
   if (role === 'LAB') {
-    axios.patch('http://localhost:3000/labs/public', {
+    axios.patch('http://45.93.138.72:3000/labs/public', {
       publicDelivery: !isSubscribed,
     }, {
       headers: {

@@ -114,7 +114,7 @@ export default {
                     console.error("You are not authorized to perform this action.");
                     return;
                 }
-                axios.put(`http://localhost:3000/labs/contract/${id}`, {
+                axios.put(`http://45.93.138.72:3000/labs/contract/${id}`, {
                     contract:{
                         zircon_wave: this.contract.zircon_wave,
                         zircon_dental_direct: this.contract.zircon_dental_direct,
@@ -183,7 +183,7 @@ export default {
         console.log(id);
         if (this.doctorId) {
             // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-            axios.get(`http://localhost:3000/labs/contract/${id}`,{
+            axios.get(`http://45.93.138.72:3000/labs/contract/${id}`,{
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token'),
                     }

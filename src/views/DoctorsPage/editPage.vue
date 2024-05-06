@@ -239,7 +239,7 @@ export default {
             // const response = axios.get('http://127.0.0.1:8000/api/doctor/all_orders/');
             const order_id = this.id
             // Send FormData object to the server using Axios
-            axios.put(`http://localhost:3000/doctors/orders/update/${order_id}/`, formData, {
+            axios.put(`http://45.93.138.72:3000/doctors/orders/update/${order_id}/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -248,7 +248,7 @@ export default {
                     console.log("order sent successfully");
                     axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
                     const order_id = this.id;
-                    axios.get(`http://localhost:3000/doctors/orders/${order_id}`).then(response => {
+                    axios.get(`http://45.93.138.72:3000/doctors/orders/${order_id}`).then(response => {
                         //console.log(response.data);
                         console.log(response.data.gender);
                         console.log(this.id);
@@ -336,7 +336,7 @@ export default {
     created() {
         axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
         const order_id = this.id;
-        axios.get(`http://localhost:3000/doctors/orders/${order_id}`,{
+        axios.get(`http://45.93.138.72:3000/doctors/orders/${order_id}`,{
             headers: {
                 'Authorization': 'DEN ' + localStorage.getItem('token')
             }

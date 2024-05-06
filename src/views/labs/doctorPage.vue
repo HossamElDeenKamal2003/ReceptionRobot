@@ -42,7 +42,7 @@ export default {
     },
     methods: {
         deleteCard(doctor_id) {
-            axios.delete(`http://localhost:3000/labs/deleteDoc/${doctor_id}`, {
+            axios.delete(`http://45.93.138.72:3000/labs/deleteDoc/${doctor_id}`, {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -57,7 +57,7 @@ export default {
             });
         },
         addDoctor(id) {
-            axios.post(`http://localhost:3000/labs/addDoc/${id}`, {}, {
+            axios.post(`http://45.93.138.72:3000/labs/addDoc/${id}`, {}, {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -70,7 +70,7 @@ export default {
             });
         },
         fetchDoctors() {
-            axios.get('http://localhost:3000/labs/doctors',{
+            axios.get('http://45.93.138.72:3000/labs/doctors',{
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }

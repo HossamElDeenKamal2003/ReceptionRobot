@@ -194,7 +194,7 @@ export default {
                 formData.append('voiceNote', blob, 'voice.ogg');
             }
             // Send FormData object to the server using Axios
-            axios.post('http://localhost:3000/doctors/orders/add', formData, {
+            axios.post('http://45.93.138.72:3000/doctors/orders/add', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': 'DEN ' + localStorage.getItem('token'),
@@ -252,7 +252,7 @@ export default {
                 this.contract = storedContract;
             }
         }
-        // axios.get(`http://localhost:3000/labs/contract/${localStorage.getItem('id')}`, {
+        // axios.get(`http://45.93.138.72:3000/labs/contract/${localStorage.getItem('id')}`, {
         //     headers: {
         //         'Authorization': 'DEN ' + localStorage.getItem('token')
         //     }

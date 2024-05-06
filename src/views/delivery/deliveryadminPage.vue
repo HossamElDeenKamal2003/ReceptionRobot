@@ -115,7 +115,7 @@ export default {
                     }
             },
         fetchData(){
-                axios.get('http://localhost:3000/deliverers/orders',{
+                axios.get('http://45.93.138.72:3000/deliverers/orders',{
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
@@ -132,7 +132,7 @@ export default {
                 alert("Doctor : " + name +'\n' + "Address : " + address + '\n' + "Building Number : " + buildingno + '\n' + "Floor Number : " + floorno);
             },
             filterend() {
-                axios.get('http://localhost:3000/deliverers/orders/myOrders', {
+                axios.get('http://45.93.138.72:3000/deliverers/orders/myOrders', {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
@@ -149,14 +149,14 @@ export default {
                 });
             },
             takeOrder(id) {
-                axios.patch(`http://localhost:3000/deliverers/orders/otw/${id}`, {}, {
+                axios.patch(`http://45.93.138.72:3000/deliverers/orders/otw/${id}`, {}, {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
                 })
             },
             underwaOrder(id){
-                axios.patch(`http://localhost:3000/deliverers/orders/lab/delivered/${id}`,{},{
+                axios.patch(`http://45.93.138.72:3000/deliverers/orders/lab/delivered/${id}`,{},{
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }

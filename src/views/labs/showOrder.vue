@@ -274,7 +274,7 @@ export default {
     created() {
         // axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
         const order_id = this.id;
-        axios.get(`http://localhost:3000/labs/orders${order_id}`,{
+        axios.get(`http://45.93.138.72:3000/labs/orders${order_id}`,{
             headers: {
                 'Authorization': 'DEN ' + localStorage.getItem('token')
             }
