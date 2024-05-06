@@ -1,0 +1,54 @@
+.container{
+  width: 100%;
+  margin-top: 100px;
+  background-color: #eeeeee;
+  border: 1px solid black;
+  border-radius: 20px;
+  position: relative;
+  padding: 5px;
+}
+.btnss{
+  position: absolute;
+  top: -70px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid blue;
+  padding: 5px;
+  z-index: 1000;
+}
+.btnss button{
+  transition: 0.5s;
+  opacity: 0;
+}
+.btnss button:hover{
+  opacity: 1;
+}
+
+div img{
+   width: 100%;
+  height: 100%;
+  border-radius: 20px; 
+}
+
+
+.btnss button.show{
+  opacity: 1;
+}
+.btnss button.show:hover{
+  opacity: 1;
+}
+div .slider-2,
+div .slider-3{
+  display: none;
+}
+#controls-carousel {
+  height: 100%;
+}
+
+[data-carousel-item] {
+  height: 100%;
+}

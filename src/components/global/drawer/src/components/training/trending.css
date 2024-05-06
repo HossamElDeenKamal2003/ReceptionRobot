@@ -1,0 +1,42 @@
+.screen{
+    background-color: #fff ;
+    margin-top: 100px;
+    display: block;
+    position: relative;
+
+}
+.screen img{
+    margin: 100px auto;
+    display: block;
+    width: 80%;
+
+
+}
+.btns{
+    position: absolute;
+    top: 80px;
+    left: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    z-index: 50;
+
+}
+.btns button{
+    width: 100%;
+    padding: 10px;
+    background-color: orange;
+    color: #fff;
+    border: none;cursor: pointer;
+    margin: auto;
+    font-size: 18px;
+}
+.train-img{
+    width: 800px !important;
+    position: absolute;
+    top: -50px;
+    left: 282px;
+    height: 500px;
+}
