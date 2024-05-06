@@ -82,7 +82,7 @@ export default {
     data() {
         return {
             contract: {
-                contract:{},
+                contract:0,
                 name: "",
                 code: "",
                 zircon_wave: 0,
@@ -176,6 +176,7 @@ export default {
         }
     },
     created() {
+        this.contract = {};
         this.userRole = localStorage.getItem('role');
         const id = this.$route.params.id;
         this.pathId = id;
