@@ -4,7 +4,7 @@
         <firstSection />
         <secondSection />
         <thirdSection />
-        <plansView />
+        <!-- <plansView /> -->
         <footerSection />
     </div>
 </template>
@@ -14,7 +14,7 @@ import headerPage from "@/components/global/navBar.vue";
 import firstSection from "@/views/Home/firstSection.vue";
 import secondSection from "@/views/Home/secondSection.vue";
 import thirdSection from "@/views/Home/thirdSection.vue";
-import plansView from "@/views/Home/plansView.vue";
+// import plansView from "@/views/Home/plansView.vue";
 import footerSection from "@/views/Home/footerSection.vue";
 export default {
     name: 'homeView',
@@ -23,7 +23,7 @@ export default {
         firstSection,
         secondSection,  
         thirdSection,
-        plansView,
+        // plansView,
         footerSection,
     }
 

@@ -16,3 +16,11 @@
         }
     }
 </script>
+
+<style scoped>
+    @media print{
+        .parent {
+            display: none;
+        }
+    }
+</style>

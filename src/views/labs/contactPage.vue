@@ -42,8 +42,7 @@
                 <div class="prices">
                     <input class="form-control" type="number" placeholder="Price" v-model="contract.zircon_wave">
                     <input class="form-control" type="number" placeholder="Price" v-model="contract.zircon_dental_direct">
-                    <input class="form-control" type="number" placeholder="Price"
-                        v-model="contract.zircon_emax_prime_ivoclar">
+                    <input class="form-control" type="number" placeholder="Price" v-model="contract.zircon_emax_prime_ivoclar">
                     <input class="form-control" type="number" placeholder="Price" v-model="contract.impress_crown">
                     <input class="form-control" type="number" placeholder="Price" v-model="contract.impress_intaly">
                     <input class="form-control" type="number" placeholder="Price" v-model="contract.impress_onlay">
@@ -70,11 +69,11 @@ import navBar from "@/components/global/navBar.vue";
 import axios from 'axios';
 export default {
     props: ['id'],
-    computed: {
-        doctorId() {
-            return this.id;
-        }
-    },
+    // computed: {
+    //     doctorId() {
+    //         return this.id;
+    //     }
+    // },
     name: "contactLab",
     components: {
         navBar,
@@ -82,25 +81,24 @@ export default {
     data() {
         return {
             contract: {
-                contract:{},
-                name: "",
-                code: "",
-                zircon_wave: 0,
-                zircon_dental_direct: 0,
-                zircon_emax_prime_ivoclar: 0,
-                impress_crown: 0,
-                impress_intaly: 0,
-                impress_onlay: 0,
-                impress_overlay: 0,
-                pfm: 0,
-                implant_zircon: 0,
-                implant_pfm: 0,
-                night_gard: 0,
-                night_white: 0,
-                retainer: 0,
-                study_model: 0,
-                snap_on_smile: 0,
-                id: "",
+            name: "",
+            code: "",
+            zircon_wave: 0,
+            zircon_dental_direct: 0,
+            zircon_emax_prime_ivoclar: 0,
+            impress_crown: 0,
+            impress_intaly: 0,
+            impress_onlay: 0,
+            impress_overlay: 0,
+            pfm: 0,
+            implant_zircon: 0,
+            implant_pfm: 0,
+            night_gard: 0,
+            night_white: 0,
+            retainer: 0,
+            study_model: 0,
+            snap_on_smile: 0,
+            id: "", // Assuming this is the contract ID
             },
             button: "Submit",
             pathId:"",
@@ -114,8 +112,25 @@ export default {
                     console.error("You are not authorized to perform this action.");
                     return;
                 }
+                // const contractData = {
+                //     zircon_wave: Number(this.contract.zircon_wave),
+                //     zircon_dental_direct: parseFloat(this.contract.zircon_dental_direct),
+                //     zircon_emax_prime_ivoclar: parseFloat(this.contract.zircon_emax_prime_ivoclar),
+                //     impress_crown: parseFloat(this.contract.impress_crown),
+                //     impress_intaly: parseFloat(this.contract.impress_intaly),
+                //     impress_onlay: parseFloat(this.contract.impress_onlay),
+                //     impress_overlay: parseFloat(this.contract.impress_overlay),
+                //     pfm: parseFloat(this.contract.pfm),
+                //     implant_zircon: parseFloat(this.contract.implant_zircon),
+                //     implant_pfm: parseFloat(this.contract.implant_pfm),
+                //     night_gard: parseFloat(this.contract.night_gard),
+                //     night_white: parseFloat(this.contract.night_white),
+                //     retainer: parseFloat(this.contract.retainer),
+                //     study_model: parseFloat(this.contract.study_model),
+                //     snap_on_smile: parseFloat(this.contract.snap_on_smile)
+                // };
                 axios.put(`http://45.93.138.72:3000/labs/contract/${id}`, {
-                    contract:{
+                        contract:{
                         zircon_wave: this.contract.zircon_wave,
                         zircon_dental_direct: this.contract.zircon_dental_direct,
                         zircon_emax_prime_ivoclar: this.contract.zircon_emax_prime_ivoclar,
@@ -138,7 +153,8 @@ export default {
                     }
                 
                 }).then(response => {
-                    console.log(response.data);
+                    console.log(response.data)
+                    console.log("contract sent successfully");
                     this.$router='/doctorLab';
                 }).catch(error => {
                     console.log(error);
@@ -187,8 +203,7 @@ export default {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token'),
                     }
-            })
-                .then((response) => {
+            }).then((response) => { 
                     this.contract = response.data;
                     console.log(this.contract);
                 }).catch(error => {
@@ -199,8 +214,20 @@ export default {
             this.button = "Update";
             console.log(this.$route.path);
         }
-    }
-
+    },
+    
+    watch: {
+        'contract.zircon_wave': function(newValue) {
+            console.log('zircon_wave:', typeof newValue);
+        },
+        'contract.zircon_dental_direct': function(newValue) {
+            console.log('zircon_dental_direct:', typeof newValue);
+        },
+        'contract.zircon_emax_prime_ivoclar': function(newValue) {
+            console.log('zircon_emax_prime_ivoclar:', typeof newValue);
+        },
+        // Add similar watchers for other input fields
+    },
 }
 </script>
 

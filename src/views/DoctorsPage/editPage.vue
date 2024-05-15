@@ -370,6 +370,22 @@ export default {
 };
 </script>
 <style scoped>
+
+@media print{
+    .sidebar{
+        display: none;
+    }
+    .content{
+        position: absolute;
+        width: 90%;
+        left: -20%;
+        top: 0;
+    }
+    button,i{
+        display: none;
+    }
+}
+
 .sidebar {
     margin: 0;
     padding: 0;

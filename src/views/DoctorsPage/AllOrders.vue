@@ -10,10 +10,14 @@
         <div class="content">
             <div class="header">
                 <ul ref="list">
-                    <li tabindex="0"><button :disabled="isUsernameEmptyOrNull" class="filter" @click="filterAll">All</button></li>
-                    <li tabindex="0"><button :disabled="isUsernameEmptyOrNull" class="filter" @click="filterunderway">Underway</button> </li>
-                    <li tabindex="0"><button :disabled="isUsernameEmptyOrNull" class="filter" @click="filterReady">Ready</button> </li>
-                    <li tabindex="0"><button :disabled="isUsernameEmptyOrNull" class="filter" @click="filterend">End</button></li>
+                    <li tabindex="0"><button :disabled="isUsernameEmptyOrNull" class="filter"
+                            @click="filterAll">All</button></li>
+                    <li tabindex="0"><button :disabled="isUsernameEmptyOrNull" class="filter"
+                            @click="filterunderway">Underway</button> </li>
+                    <li tabindex="0"><button :disabled="isUsernameEmptyOrNull" class="filter"
+                            @click="filterReady">Ready</button> </li>
+                    <li tabindex="0"><button :disabled="isUsernameEmptyOrNull" class="filter"
+                            @click="filterend">End</button></li>
                 </ul>
                 <div id="search-wrapper">
                     <i class="bi bi-search search-icon"></i>
@@ -63,7 +67,7 @@ export default {
             searchTerm: "",
             selectedField: "id",
             orders: [
-                
+
             ],
             filteredOrders: [],
             status: "",
@@ -74,45 +78,45 @@ export default {
     },
     computed: {
         isUsernameEmptyOrNull() {
-        const username = localStorage.getItem('username');
-        return username === '' || username === null;
+            const username = localStorage.getItem('username');
+            return username === '' || username === null;
         }
     },
     methods: {
         filterTableName() {
-    if (!this.searchTerm) {
-      // If search term is empty, show all orders
-        this.filteredOrders = this.orders;
-        return;
-    }
-    const searchTermLowerCase = this.searchTerm.toLowerCase();
-    // Filter orders based on selected field
-    if (this.selectedField === "id") {
-        this.filteredOrders = this.orders.filter(order =>
-            String(order.UID).includes(this.searchTerm)
-        );
-        } else if (this.selectedField === "name") {
-        this.filteredOrders = this.orders.filter(order =>
-            order.patientName && order.patientName.toLowerCase().includes(searchTermLowerCase)
-        );
-        } else if (this.selectedField === "doctor") {
-        this.filteredOrders = this.orders.filter(order =>
-            order.doctor_name && order.doctor_name.toLowerCase().includes(searchTermLowerCase)
-        );
-        }
-    },
-    filterAll() {
-        this.filteredOrders = this.orders;
-    },
-    filterunderway() {
-        this.filteredOrders = this.orders.filter(order => order.status === "Underway");
-    },
-    filterend() {
-        this.filteredOrders = this.orders.filter(order => order.status === "End");
-    },
-    filterReady() {
-        this.filteredOrders = this.orders.filter(order => order.status === "Ready");
-    },
+            if (!this.searchTerm) {
+                // If search term is empty, show all orders
+                this.filteredOrders = this.orders;
+                return;
+            }
+            const searchTermLowerCase = this.searchTerm.toLowerCase();
+            // Filter orders based on selected field
+            if (this.selectedField === "id") {
+                this.filteredOrders = this.orders.filter(order =>
+                    String(order.UID).includes(this.searchTerm)
+                );
+            } else if (this.selectedField === "name") {
+                this.filteredOrders = this.orders.filter(order =>
+                    order.patientName && order.patientName.toLowerCase().includes(searchTermLowerCase)
+                );
+            } else if (this.selectedField === "doctor") {
+                this.filteredOrders = this.orders.filter(order =>
+                    order.doctor_name && order.doctor_name.toLowerCase().includes(searchTermLowerCase)
+                );
+            }
+        },
+        filterAll() {
+            this.filteredOrders = this.orders;
+        },
+        filterunderway() {
+            this.filteredOrders = this.orders.filter(order => order.status === "Underway");
+        },
+        filterend() {
+            this.filteredOrders = this.orders.filter(order => order.status === "End");
+        },
+        filterReady() {
+            this.filteredOrders = this.orders.filter(order => order.status === "Ready");
+        },
         // filterTable() {
         //     if (this.orders.length === 0) {
         //         console.log("Orders are still loading...");
@@ -121,9 +125,9 @@ export default {
         //     this.searchFilter = this.searchTerm.toLowerCase()
         // },
         //rId) {
-    //     if (!confirm("Are you sure you want to delete this order?")) {
-    //         return; // Do nothing if user cancels
-    //     }
+        //     if (!confirm("Are you sure you want to delete this order?")) {
+        //         return; // Do nothing if user cancels
+        //     }
 
         // axios.patch(`http://localhost:8000/api/delete_order/${orderId}/`)
         //     .then(response => {
@@ -137,29 +141,30 @@ export default {
         //         console.error("Error deleting order:", error);
         //         // Handle error here
         //     });
-    // },
-    
-    fetchData() {
-        if (this.searchTerm.trim() !== "") {
-            return;
-        }
-        let ApiUrl;
-        if (this.filterForSearch == "") {
-            ApiUrl = 'http://45.93.138.72:3000/doctors/orders'
-        }
-        // } else {
-        //     ApiUrl = 'http://127.0.0.1:8000/api/doctor/all_orders/?status=' + this.filterForSearch
-        // }
+        // },
 
-
-        axios.get(ApiUrl, {
-            headers: {
-                'Authorization': 'DEN ' + localStorage.getItem('token')
+        fetchData() {
+            if (this.searchTerm.trim() !== "") {
+                return;
             }
-        }).then(response => {
+            let ApiUrl;
+            if (this.filterForSearch == "") {
+                ApiUrl = 'http://45.93.138.72:3000/doctors/orders'
+            }
+            // } else {
+            //     ApiUrl = 'http://127.0.0.1:8000/api/doctor/all_orders/?status=' + this.filterForSearch
+            // }
+
+
+            axios.get(ApiUrl, {
+                headers: {
+                    'Authorization': 'DEN ' + localStorage.getItem('token')
+                }
+            }).then(response => {
                 console.log("Response:", response.data);
                 this.orders = response.data.reverse();
                 this.filteredOrders = this.orders;
+                this.filteredOrders.reverse();
                 // this.filteredOrders = this.orders.filter(order =>
                 //     order.name.toLowerCase().includes(this.searchFilter)
                 // );
@@ -177,15 +182,15 @@ export default {
     },
     mounted() {
         const username = localStorage.getItem('username');
-            if(username !== '' && username !== null){
+        if (username !== '' && username !== null) {
             this.fetchData();
         }
     },
     created() {
-            //axios.get('http://127.0.0.1:8000/api/laboratory/all_orders/').then(response =>{
-            //    console.log(response.data);
-            //})
-        
+        //axios.get('http://127.0.0.1:8000/api/laboratory/all_orders/').then(response =>{
+        //    console.log(response.data);
+        //})
+
         //axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
     }
 };
@@ -367,5 +372,26 @@ div.content {
 
 table {
     margin-top: 15px;
+}
+
+@media only screen and (max-width: 840px) {
+    .sidebar {
+        margin-top: 80px;
+    }
+
+    table {
+        margin-right: 100px;
+        margin-right: -180px;
+    }
+}
+
+@media only screen and (max-width: 426px) {
+    .sidebar {
+        margin-top: 0;
+    }
+
+    table {
+        margin-right: -680px;
+    }
 }
 </style>

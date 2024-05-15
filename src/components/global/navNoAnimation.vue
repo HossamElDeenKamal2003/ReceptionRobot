@@ -38,8 +38,11 @@
                 </span>
                 Login/SignUp
             </router-link>
-            <span>{{ this.username }}</span>
-            <span>{{ this.id }}</span>
+            <div class="data">
+                <span title="UserName">{{ this.username }} </span>
+                <span v-if="username">/</span>
+                <span title="ID">{{ this.id }}</span>
+            </div>  
             <button @click="signOut" title="SignOut" class="btn btn-primary btn-sm" v-if="username!=''"><i class="bi bi-box-arrow-right"></i></button>
         </nav>
     </div>
@@ -123,6 +126,13 @@ nav {
     animation-fill-mode: forwards;
 }
 
+
+@media print{
+    nav {
+        display: none;
+    }
+}
+
 .logo {
     animation-name: slide-in;
     animation-duration: 1s;
@@ -183,7 +193,7 @@ h1 {
     }
 }
 
-@media only screen and (max-width: 455px) {
+@media only screen and (max-width: 840px) {
     .parent {
         height: fit-content;
     }

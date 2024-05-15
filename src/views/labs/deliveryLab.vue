@@ -128,6 +128,7 @@ export default {
                 axios.get(ApiUrl).then(response => {
                     this.orders = response.data;
                     this.filteredOrders = this.orders;
+                    this.filteredOrders.reverse();
                 })
                     .catch(error => {
                         console.error("Error fetching data:", error);

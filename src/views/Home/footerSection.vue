@@ -5,9 +5,9 @@
             <h1 class="llab" style="color:#33A1F1;">Robot</h1>
         </div>
         <div class="icons">
-            <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="social-icon"><i class="bi bi-whatsapp"></i></a>
+            <a href="https://www.facebook.com/share/W3MSbiL7p7d2VWYZ/?mibextid=qi2Omg" class="social-icon" target="_blank"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/receptionrobot?igsh=MXJkN2NkNnQzaDZkNQ==" class="social-icon" target="_blank"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-icon"  target="_blank"><i class="bi bi-whatsapp"></i></a>
         </div>
     </div>
 </template>

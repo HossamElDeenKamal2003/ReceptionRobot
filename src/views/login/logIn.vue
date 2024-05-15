@@ -487,7 +487,11 @@ export default {
                       localStorage.setItem('id', response.data.user.UID);
                       localStorage.setItem('contract', response.data.labContract)
                       this.$router.push('/');
-                    })
+                    }).catch((error=>{
+                      if(error.response && error.response.status === 500){
+                        alert("Please enter all data");
+                      }
+                    }))
                     // axios.post('http://45.93.138.72:3000/users/login', {
                     //     username: this.signUp.usernameSign,
                     //     password: this.signUp.passwordSign

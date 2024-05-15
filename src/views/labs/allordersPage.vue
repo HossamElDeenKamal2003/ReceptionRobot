@@ -1,6 +1,7 @@
 <template>
   <div class="parent">
     <navNoAnmi />
+    <audio ref="ringSound" src="@/assets/ring.mp3" preload="auto"></audio>
     <div class="sidebar" :class="{ active: isActiveSidebar }">
       <router-link to="/allOrderslabs" style="text-decoration: underline"
         >All Orders <span>{{ diffrence }}</span> </router-link
@@ -26,7 +27,7 @@
             <button :disabled="isUsernameEmptyOrNull" class="filter" @click="filterReady">Ready</button>
           </li>
           <li tabindex="0">
-            <button :disabled="isUsernameEmptyOrNull" class="filter" @click="update">Update</button>
+            <!-- <button :disabled="isUsernameEmptyOrNull" class="filter" @click="update">Update</button> -->
           </li>
         </ul>
         <div id="search-wrapper">
@@ -64,14 +65,15 @@
             <th>End Order</th>
           </tr>
           <!-- <tr v-for="(order, index) in filteredOrders" :key="index" :style="{ border: check ? '2px solid green' : '' }> -->
-            <tr :class="{ 'green-row': order.from_laboratory}" v-for="(order, index) in filteredOrders" :key="index"><td>{{ order.UID }}</td>
-            <td>
+            <tr v-for="(order, index) in filteredOrders" :key="index">
+              <td>{{ order.UID }}</td>
+              <td>
               <router-link :to="'/showorder/' + order._id">{{
                 order.patientName
               }}</router-link>
             </td>
             <td>{{ order.doc_id.username }}</td>
-            <td>{{ order.status }}</td>
+            <td  class="status">{{ order.status }}</td>
             <td>{{ order.updatedAt }}</td>
             <!-- <td>{{ order.price-order.paid }}</td> -->
             <!-- <td>{{ order.paid }}</td> -->
@@ -101,7 +103,7 @@
                 v-model="order.price"
               />
             </td>
-            <td><button @click="markeOrder(order._id)" class="btn btn-primary btn-sm"><i :class="check ? 'bi bi-check' : 'bi bi-x'"></i></button></td>
+            <td><button @click="markOrder(order._id)" class="btn btn-primary btn-sm"><i :class="check ? 'bi bi-check' : 'bi bi-x'"></i></button></td>
             <!-- <td @click="deleteRow(order._id)"><i class="bi bi-trash"></i></td> -->
           </tr>
         </table>
@@ -150,12 +152,17 @@ export default {
       //old_number: 0,
       new_number: 0,
       difference: 0,
+      firstLength:0,
+      secondLength:0,
+      flag:true,
     };
   },
+
   methods:{
   fetchData() {
     const role = localStorage.getItem('role');
-    if (role === 'LAB') {
+    if(this.flag === true){
+      if (role === 'LAB') {
       axios.get('http://45.93.138.72:3000/labs/orders', {
         headers: {
           'Authorization': 'DEN ' + localStorage.getItem('token')
@@ -163,6 +170,7 @@ export default {
       }).then((response) => {
         this.orders = response.data.reverse();
         this.filteredOrders = this.orders;
+        // this.filteredOrders.reverse();
       }).catch((error) => {
         // Handle error
         console.error('An error occurred:', error.message);
@@ -171,6 +179,8 @@ export default {
       console.log('Unauthorized access: User role is not LAB');
       // You can handle unauthorized access here, such as showing a message or redirecting the user
     }
+    }
+    
   },
   check_order(ID) {
     const role = localStorage.getItem('role');
@@ -184,7 +194,7 @@ export default {
         }
       }).then(response => {
         console.log(response.data);
-        this.fetchData(); // Assuming fetchData fetches updated orders from the server
+        this.fetchData();
       }).catch(error => {
         console.error('An error occurred:', error.message);
       });
@@ -208,12 +218,24 @@ export default {
     console.error('An error occurred:', error.message);
   });
 },
-  markeOrder(id){
-    axios.patch(`http://45.93.138.72:3000/labs/orders/${id}`,{},{
-      headers: {
-            'Authorization': 'DEN ' + localStorage.getItem('token')
-        }
-    })
+markOrder(orderId) {
+  axios.patch(`http://45.93.138.72:3000/labs/orders/${orderId}`, {}, {
+    headers: {
+      'Authorization': 'DEN ' + localStorage.getItem('token')
+    }
+  })
+  .then(response => {
+    this.end_order = true; // Assuming you want to set a flag indicating that the order has been marked
+    console.log('Order marked successfully:', response.data);
+  })
+  .catch(error => {
+    if (error.response && error.response.status === 400) {
+      console.error('Failed to mark order:', error.response.data);
+      alert("Cannot set order end");
+    } else {
+      console.error('An error occurred:', error.message);
+    }
+  });
   },
 
   manage_sub() {
@@ -261,21 +283,25 @@ export default {
       );
     } else if (this.selectedField === "doctor") {
       this.filteredOrders = this.orders.filter(order =>
-        order.doctor_name && order.doctor_name.toLowerCase().includes(searchTermLowerCase)
+        order.doc_id.username && order.doc_id.username.toLowerCase().includes(searchTermLowerCase)
       );
     }
   },
   filterAll() {
+    this.flag = true,
     this.filteredOrders = this.orders;
   },
   filterunderway() {
+    this.flag = false;
     this.filteredOrders = this.orders.filter(order => order.status === "Underway");
   },
   filterend() {
+    this.flag = false;
     this.filteredOrders = this.orders.filter(order => order.status === "End");
   },
   filterReady() {
-    this.filteredOrders = this.orders.filter(order => order.status === "Ready");
+    this.flag = false;
+    this.filteredOrders = this.orders.filter(order => order.status === "LabReady");
   },
 
 },
@@ -311,6 +337,10 @@ export default {
   height: 100%;
   overflow: auto;
   transition: 0.5s;
+}
+
+.status{
+  color:#33a1f1;
 }
 
 .sidebar a {
@@ -500,5 +530,27 @@ table {
 
 .update:focus {
   color: black;
+}
+
+
+
+@media only screen and (max-width: 840px) {
+    .sidebar{
+      margin-top: 80px;
+    }
+
+    table{
+      margin-right: 100px;
+      margin-right: -180px;
+    }
+}
+@media only screen and (max-width: 426px) {
+  .sidebar{
+    margin-top: 0;
+  }
+
+  table{
+    margin-right: -680px;
+  }
 }
 </style>

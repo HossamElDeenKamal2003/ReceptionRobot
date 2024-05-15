@@ -111,7 +111,7 @@
                     <div class="container">
                         <div class="display">
                             <p>{{ message }}</p>
-                            <audio controls  :src="records" @change="handleAudioFileChange"></audio>
+                            <audio controls :src="records" @change="handleAudioFileChange"></audio>
                             <!-- <audio controls src="E:\masallab editversion\massalab\voice_records\voice_gftfJ7d.ogg"></audio> -->
                             <!-- <input type="file" class="hiddenInput" v-if="inputURL"/> -->
                         </div>
@@ -145,9 +145,9 @@ export default {
             return this.id;
         },
         formattedType() {
-        // Replace underscores with dashes in the type value
-        return this.type.replace('_', '-');
-    }
+            // Replace underscores with dashes in the type value
+            return this.type.replace('_', '-');
+        }
     },
     name: "newOrder",
     data() {
@@ -170,10 +170,10 @@ export default {
             audioURL: '',
             inputURL: "",
             chunks_to_send: [],
-            records:'',
-            error:'e',
-            color_new_value:"",
-            alt_record:"",
+            records: '',
+            error: 'e',
+            color_new_value: "",
+            alt_record: "",
             // toothColors: ["A1", "A2", "A3", "A3.5", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D2", "D3", "D4", "BL1", "BL2", "BL3", "BL4"],
         };
     },
@@ -207,7 +207,7 @@ export default {
             this.Toothcolor = newValue;
         },
 
-},
+    },
 
     methods: {
         checkName() {
@@ -220,7 +220,7 @@ export default {
             this.inputURL = this.audioFile;
             console.log(this.inputURL);
         },
-        printer(){
+        printer() {
             // document.getElementById('name').style.display = 'block';
             // document.getElementById('Age').style.display = 'block';
             // document.getElementById('numberTeeth').style.display = 'block';
@@ -240,7 +240,7 @@ export default {
             } else {
                 console.error('MediaRecorder is not initialized.');
             }
-            
+
             // Listen for data available event
             this.mediaRecorder.ondataavailable = e => {
                 // Append new chunks to the existing array
@@ -272,39 +272,29 @@ export default {
         },
     },
     created() {
-        // axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
-        const order_id = this.id;
-        axios.get(`http://45.93.138.72:3000/labs/orders${order_id}`,{
-            headers: {
-                'Authorization': 'DEN ' + localStorage.getItem('token')
-            }
-        }).then(response => {
-            console.log(response.data);
-            //console.log(response.data.gender);
-            console.log(this.id);
-            this.Patientname = response.data.patientName
-            this.Age = response.data.age;
-            this.Toothcolor = response.data.color;
-            this.numberofteeth = response.data.teethNo;
-            if(response.data.gender === 'M'){
-                this.sex = 'Male';
-                console.log(this.sex);
-            }else{
-                this.sex = 'Female';
-            }
-            
-            this.sex = response.data.sex;
-            this.note = response.data.description;
-            this.type = response.data.type;
-            console.log(this.type);
-            //this.audioURL = response.data.records[0].voice_record;
-            // this.audioURL = 'E:\\masallab editversion\\massalab\\voice_records'+response.data.records[0].voice_record;
-            // console.log(this.audioURL);
-            //this.records.push(response.data.records);
-                this.records = response.data.voiceNote;
-            console.log(this.records);
-        })
-    },
+    const orderId = this.$route.params.id; 
+    axios.get(`http://45.93.138.72:3000/labs/orders/${orderId}`, {
+        headers: {
+            'Authorization': 'DEN ' + localStorage.getItem('token')
+        }
+    })
+    .then(response => {
+        console.log(response.data);
+        this.Patientname = response.data.patientName;
+        this.Age = response.data.age;
+        this.Toothcolor = response.data.color;
+        this.numberofteeth = response.data.teethNo;
+        this.sex = response.data.sex === 'M' ? 'Male' : 'Female';
+        this.note = response.data.description;
+        this.type = response.data.type;
+        this.records = response.data.voiceNote;
+        console.log(this.records);
+    })
+    .catch(error => {
+        console.error('Error fetching order:', error);
+    });
+},
+
 };
 </script>
 <style scoped>

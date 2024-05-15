@@ -8,8 +8,8 @@
         <div class="content">
             <div class="header" style="margin-top: 15px;">
                 <ul ref="list">
-                    <li tabindex="0"><button class="filter" @click="fetchData">All</button></li>
-                    <li tabindex="0"><button class="filter" @click="filterend">End</button></li>
+                    <li tabindex="0"><button class="filter" @click="fetchData">Available</button></li>
+                    <li tabindex="0"><button class="filter" @click="filterend">OnWay</button></li>
                 </ul>
                 <div id="search-wrapper">
                     <i class="bi bi-search search-icon"></i>
@@ -36,20 +36,37 @@
                         <td>{{ order.UID }}</td>
                         <td>{{ order.patientName }}</td>
                         <!-- <td>{{ order.doctor_name }} </td> -->
-                        <td>
-                            <button v-if="order.doc_id" @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{ order.doc_id.username }}</button>
+                        <!-- <td>
+                            <button v-if="order.doc_id"
+                                @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{
+                                    order.doc_id.username }}</button>
                         </td>
                         <td>
-                            <button v-if="order.doc_id" @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{ order.lab_id.username }}</button>
+                            <button v-if="order.doc_id"
+                                @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{
+                                    order.lab_id.username }}</button>
+                        </td> -->
+                        <td>
+                            <button v-if="order.status === 'LabReady'  || order.status ==='OTW_DOC'|| order.status === 'End'"
+                                @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{ order.lab_id.username }}</button>
+                            <button v-else-if="order.status === 'DocReady' || order.status === 'OTW_LAB' || order.status === 'Underway'"
+                                @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{ order.doc_id.username }}</button>
+                        </td>
+                        <td>
+                            <button v-if="order.status === 'LabReady'|| order.status ==='OTW_DOC'|| order.status === 'End'"
+                                @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{ order.doc_id.username }}</button>
+                            <button v-else-if="order.status === 'DocReady'|| order.status === 'OTW_LAB' || order.status === 'Underway'"
+                                @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{ order.lab_id.username }}</button>
                         </td>
                         <td>
                             {{ order.status }}
                         </td>
                         <td>
-                            <button @click="order.status === 'OTW_LAB' ? underwaOrder(order._id) : takeOrder(order._id)">
+                            <!-- <button @click="order.status === 'OTW_LAB' ? underwaOrder(order._id) : takeOrder(order._id)">
                                 {{ order.status === 'LabReady' || order.status === 'Underway' ? 'Take Order' : (order.status === 'OTW_LAB' ? 'Delivered' : '') }}
-                            </button>   
-                        </td>                
+                            </button>    -->
+                            <button @click="takeOrder(order)">{{ message_delivery }}</button>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -67,6 +84,7 @@ export default {
     },
     data() {
         return {
+            message_delivery: 'End-mission',
             click: false,
             color: "blue",
             selectedField: "id",
@@ -79,7 +97,7 @@ export default {
                 modificationDate: "",
             },
             orders: [
-                
+
             ],
             filterForSearch: "",
             filteredOrders: [],
@@ -95,51 +113,52 @@ export default {
         filterTableName() {
             if (!this.searchTerm) {
                 // If search term is empty, show all orders
-                    this.filteredOrders = this.orders;
-                    return;
-                    }
-                    const searchTermLowerCase = this.searchTerm.toLowerCase();
-                    // Filter orders based on selected field
-                    if (this.selectedField === "id") {
-                    this.filteredOrders = this.orders.filter(order =>
-                        String(order.UID).includes(this.searchTerm)
-                    );
-                    } else if (this.selectedField === "name") {
-                    this.filteredOrders = this.orders.filter(order =>
-                        order.patientName && order.patientName.toLowerCase().includes(searchTermLowerCase)
-                    );
-                    } else if (this.selectedField === "doctor") {
-                    this.filteredOrders = this.orders.filter(order =>
-                        order.doctor_name && order.doctor_name.toLowerCase().includes(searchTermLowerCase)
-                    );
-                    }
-            },
-        fetchData(){
-                axios.get('http://45.93.138.72:3000/deliverers/orders',{
-                    headers: {
-                        'Authorization': 'DEN ' + localStorage.getItem('token')
-                    }
-                }).then((response)=>{
-                    this.orders = response.data.filter(order => order.status !== 'End');
-                    this.filteredOrders = this.orders;
-                    console.log(this.filteredOrders);
-                    
-                }).catch((error) => {
-                    console.error('Error fetching data:', error);
-                });
-            },
-            addressDoc(buildingno, floorno, name, address){
-                alert("Doctor : " + name +'\n' + "Address : " + address + '\n' + "Building Number : " + buildingno + '\n' + "Floor Number : " + floorno);
-            },
-            filterend() {
-                axios.get('http://45.93.138.72:3000/deliverers/orders/myOrders', {
-                    headers: {
-                        'Authorization': 'DEN ' + localStorage.getItem('token')
-                    }
-                })
+                this.filteredOrders = this.orders;
+                return;
+            }
+            const searchTermLowerCase = this.searchTerm.toLowerCase();
+            // Filter orders based on selected field
+            if (this.selectedField === "id") {
+                this.filteredOrders = this.orders.filter(order =>
+                    String(order.UID).includes(this.searchTerm)
+                );
+            } else if (this.selectedField === "name") {
+                this.filteredOrders = this.orders.filter(order =>
+                    order.patientName && order.patientName.toLowerCase().includes(searchTermLowerCase)
+                );
+            } else if (this.selectedField === "doctor") {
+                this.filteredOrders = this.orders.filter(order =>
+                    order.doctor_name && order.doctor_name.toLowerCase().includes(searchTermLowerCase)
+                );
+            }
+        },
+        fetchData() {
+            axios.get('http://45.93.138.72:3000/deliverers/orders', {
+                headers: {
+                    'Authorization': 'DEN ' + localStorage.getItem('token')
+                }
+            }).then((response) => {
+                this.orders = response.data.filter(order => order.status !== 'End');
+                this.filteredOrders = this.orders;
+                this.filteredOrders.reverse();
+                console.log(this.filteredOrders);
+            }).catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+        },
+        addressDoc(buildingno, floorno, name, address) {
+            alert("Name : " + name + '\n' + "Address : " + address + '\n' + "Building Number : " + buildingno + '\n' + "Floor Number : " + floorno);
+        },
+        filterend() {
+            axios.get('http://45.93.138.72:3000/deliverers/orders/myOrders', {
+                headers: {
+                    'Authorization': 'DEN ' + localStorage.getItem('token')
+                }
+            })
                 .then((response) => {
                     this.orders = response.data.filter(order => order.status !== 'DocReady');
                     this.filteredOrders = this.orders;
+                    this.filteredOrders.reverse();
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 404) {
@@ -147,24 +166,55 @@ export default {
                         alert("No data available");
                     }
                 });
-            },
-            takeOrder(id) {
-                axios.patch(`http://45.93.138.72:3000/deliverers/orders/otw/${id}`, {}, {
+        },
+        // takeOrder(id) {
+        //     axios.patch(`http://45.93.138.72:3000/deliverers/orders/otw/${id}`, {}, {
+        //         headers: {
+        //             'Authorization': 'DEN ' + localStorage.getItem('token')
+        //         }
+        //     })
+        // },
+        // underwaOrder(id){
+        //     axios.patch(`http://45.93.138.72:3000/deliverers/orders/lab/delivered/${id}`,{},{
+        //         headers: {
+        //             'Authorization': 'DEN ' + localStorage.getItem('token')
+        //         }
+        //     })
+        // }
+        takeOrder(order) {
+            if (order.status === 'DocReady' || order.status === 'LabReady') {
+                axios.patch(`http://45.93.138.72:3000/deliverers/orders/otw/${order._id}`, {}, {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
-                })
-            },
-            underwaOrder(id){
-                axios.patch(`http://45.93.138.72:3000/deliverers/orders/lab/delivered/${id}`,{},{
+                }).then(() => {
+                    this.fetchData();
+                }).catch((error) => {
+                    console.error('Error taking order:', error);
+                });
+            } else if (order.status === 'OTW_LAB') {
+                axios.patch(`http://45.93.138.72:3000/deliverers/orders/lab/delivered/${order._id}`, {}, {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
+                }).then(() => {
+                    this.fetchData();
+                }).catch((error) => {
+                    console.error('Error delivering order:', error);
+                });
+            }else if(order.status === 'OTW_DOC'){
+                axios.patch(`http://45.93.138.72:3000/deliverers/orders/doc/delivered/${order._id}`,{},{
+                    headers: {
+                        'Authorization': 'DEN ' + localStorage.getItem('token')
+                    }
+                }).then(()=>{
+                    this.fetchData();
                 })
             }
-        },
-        
-    created(){
+        }
+    },
+
+    created() {
         this.fetchData();
     }
 };

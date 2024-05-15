@@ -85,8 +85,8 @@
                     <div class="container">
                         <div class="display">
                             <p>{{ message }}</p>
-                            <audio controls v-if="audioURL" :src="audioURL" @change="handleAudioFileChange"></audio>
-                            <input type="file" class="hiddenInput" v-if="inputURL" />
+                            <!-- <audio controls v-if="audioURL" :src="audioURL" @change="handleAudioFileChange"></audio> -->
+                            <input type="file" class="hiddenInput" v-if="audioURL" @change="handleAudioFileChange" />
                         </div>
                         <div class="controllers">
                             <button v-if="currentState === 'Initial'" @click="startRecording"
@@ -100,12 +100,17 @@
                 <div class="print&sub">
                     <!-- <div class="printer" title="Print"><i class="bi bi-printer"></i></div> -->
                     <div class="sub">
+                        <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div>
                         <button @click="preventSub" class="btn btn" title="Save" type="Submit">Submit</button>
                     </div>
                 </div>
             </form>
         </div>
+        
     </section>
+    <div id="contentPrint">
+        {{ UID }}
+    </div>
 </template>
 
 <script>
@@ -131,9 +136,11 @@ export default {
             chunks_to_send: [],
             audioURL: '',
             inputURL: "",
-            contract:{},
-            totalPrice:"",
-            doc_id:"",
+            contract: {},
+            totalPrice: "",
+            doc_id: "",
+            orders: [],
+            UID:"",
         };
     },
 
@@ -160,9 +167,6 @@ export default {
         }
     },
     methods: {
-        calculateTotalPrice() {
-            
-        },
         checkName() {
             const name = this.Patientname;
             return name !== "";
@@ -205,12 +209,12 @@ export default {
                 console.log(response.data);
                 //this.$router.go();
             }).catch(error => {
-                    console.error("Error fetching data:", error);
-                    if (error.response.status === 400) {
-                        alert("Doctor not registered on a lab");
-                    } else {
-                        alert("An error occurred while fetching data");
-                    }
+                console.error("Error fetching data:", error);
+                if (error.response.status === 400) {
+                    alert("Doctor not registered on a lab");
+                } else {
+                    alert("An error occurred while fetching data");
+                }
             });
             console.log("Form Data:", {
                 Patientname: this.Patientname,
@@ -223,7 +227,6 @@ export default {
                 audioFile: this.audioURL
             });
         },
-
         findContractByType() {
             return this.contract.find(item => item.type === this.type);
         },
@@ -243,10 +246,26 @@ export default {
             this.audioURL = ''
             this.startRecording()
         },
+        printer() {
+            axios.get('http://45.93.138.72:3000/doctors/orders', {
+                headers: {
+                    'Authorization': 'DEN ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                this.orders = response.data;
+                this.orders.reverse();
+                console.log(this.orders[0].UID);
+                this.UID = this.orders[0].UID; // Set the UID data property
+                window.print(this.UID); // Trigger the print dialog
+            }).catch(error => {
+                console.error("Error fetching orders:", error);
+            });
+        }
+
     },
 
     created() {
-        if(localStorage.getItem('contract') !== "undefined"){
+        if (localStorage.getItem('contract') !== "undefined") {
             const storedContract = JSON.parse(localStorage.getItem('contract'));
             if (storedContract) {
                 this.contract = storedContract;
@@ -265,17 +284,32 @@ export default {
     },
 
     watch: {
-        totalPrice(){
+        totalPrice() {
             this.calculateTotalPrice();
         }
     }
 };
 </script>
 <style scoped>
-label{
+@media print {
+    .all-orders{
+        display: none;
+    }
+    .contentPrint {
+        display: block;
+    }
+}
+
+.contentPrint {
+    display: none;
+    color: red;
+    background-color: red;
+}
+
+label {
     color: #33a1f1;
     font-size: larger;
-    margin-top:10px;
+    margin-top: 10px;
     text-decoration: underline;
 }
 

@@ -161,6 +161,7 @@ export default {
                     // });
                     this.orders = response.data;
                     this.filteredOrders = this.orders;
+                    this.filteredOrders.reverse();
                 })
                 .catch(error => {
                     console.error("Error fetching data:", error);
