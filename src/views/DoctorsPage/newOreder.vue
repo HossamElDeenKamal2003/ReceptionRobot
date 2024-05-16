@@ -61,7 +61,7 @@
                         <label class="form-label">Type</label>
                         <select class="form-select" v-model="type">
                             <option value="zircon_wave">Zircon Wave</option>
-                            <option value="zercon_dental_direct">Zircon Dental Direct</option>
+                            <option value="zircon_dental_direct">Zircon Dental Direct</option>
                             <option value="zircon_emax_prime_ivoclar">Zircon e-max prime ivoclar</option>
                             <option value="impress_crown">Impress Crown</option>
                             <option value="impress_intaly">Impress Intaly</option>
@@ -98,7 +98,6 @@
                     </div>
                 </div>
                 <div class="print&sub">
-                    <!-- <div class="printer" title="Print"><i class="bi bi-printer"></i></div> -->
                     <div class="sub">
                         <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div>
                         <button @click="preventSub" class="btn btn" title="Save" type="Submit">Submit</button>
@@ -155,7 +154,6 @@ export default {
                         this.chunks_to_send = this.chunks
                         this.chunks = []
                         this.audioURL = window.URL.createObjectURL(blob)
-                        // this.audioURL = blob
                     }
                 })
                 .catch(error => {
@@ -172,7 +170,6 @@ export default {
             return name !== "";
         },
         handleAudioFileChange(event) {
-            // Store the selected audio file in the component's data
             this.audioFile = event.target.files[0];
             this.inputURL = this.audioFile;
             console.log(this.inputURL);
@@ -183,7 +180,6 @@ export default {
                 alert("Please fill patient name, age and number of teeth");
                 return;
             }
-            // Create FormData object to send data to the server
             const formData = new FormData();
             formData.append('patientName', this.Patientname);
             formData.append('age', this.Age);
@@ -197,7 +193,6 @@ export default {
                 this.chunks_to_send = []
                 formData.append('voiceNote', blob, 'voice.ogg');
             }
-            // Send FormData object to the server using Axios
             axios.post('http://45.93.138.72:3000/doctors/orders/add', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -207,7 +202,7 @@ export default {
                 alert("order sent successfully");
                 console.log(formData);
                 console.log(response.data);
-                //this.$router.go();
+                this.$router.go();
             }).catch(error => {
                 console.error("Error fetching data:", error);
                 if (error.response.status === 400) {
@@ -284,6 +279,9 @@ export default {
     },
 
     watch: {
+        type(){
+            console.log(this.type);
+        },
         totalPrice() {
             this.calculateTotalPrice();
         }

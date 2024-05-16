@@ -5,7 +5,6 @@
             <router-link to="/newOrder">New Order</router-link>
             <router-link to="/allorders" style="text-decoration: underline;">All Orders</router-link>
             <router-link to="/delievry">Delivery</router-link>
-            <!-- <router-link to="/finance">Finance</router-link> -->
         </div>
         <div class="content">
             <div class="header">
@@ -44,8 +43,8 @@
                         <td><router-link :to="'/edit/' + order._id" class="edit">Edit</router-link></td>
                         <td>
                             <h5>{{ order.status }}</h5>
-                        </td> <!-- Access order status -->
-                        <td>{{ order.updatedAt }}</td> <!-- Access last_updated -->
+                        </td>
+                        <td>{{ order.updatedAt }}</td>
                     </tr>
                 </table>
             </div>
@@ -117,31 +116,6 @@ export default {
         filterReady() {
             this.filteredOrders = this.orders.filter(order => order.status === "Ready");
         },
-        // filterTable() {
-        //     if (this.orders.length === 0) {
-        //         console.log("Orders are still loading...");
-        //         return;
-        //     }
-        //     this.searchFilter = this.searchTerm.toLowerCase()
-        // },
-        //rId) {
-        //     if (!confirm("Are you sure you want to delete this order?")) {
-        //         return; // Do nothing if user cancels
-        //     }
-
-        // axios.patch(`http://localhost:8000/api/delete_order/${orderId}/`)
-        //     .then(response => {
-        //         console.log(response);
-        //         // Assuming response is successful, update your local data
-        //         this.orders = this.orders.filter(order => order.id !== orderId);
-        //         this.filteredOrders = this.filteredOrders.filter(order => order.id !== orderId);
-        //         console.log(`Order with id ${orderId} deleted successfully.`);
-        //     })
-        //     .catch(error => {
-        //         console.error("Error deleting order:", error);
-        //         // Handle error here
-        //     });
-        // },
 
         fetchData() {
             if (this.searchTerm.trim() !== "") {
@@ -151,30 +125,14 @@ export default {
             if (this.filterForSearch == "") {
                 ApiUrl = 'http://45.93.138.72:3000/doctors/orders'
             }
-            // } else {
-            //     ApiUrl = 'http://127.0.0.1:8000/api/doctor/all_orders/?status=' + this.filterForSearch
-            // }
-
 
             axios.get(ApiUrl, {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                console.log("Response:", response.data);
                 this.orders = response.data.reverse();
                 this.filteredOrders = this.orders;
-                this.filteredOrders.reverse();
-                // this.filteredOrders = this.orders.filter(order =>
-                //     order.name.toLowerCase().includes(this.searchFilter)
-                // );
-                // this.orders.forEach(order => {
-                //     if (order.status === 'u') {
-                //         order.status = "UnderWay";
-                //     } else if (order.status === 'e') {
-                //         order.status = "End";
-                //     }
-                // });
             }).catch(error => {
                 console.error("Error fetching data:", error);
             });
@@ -186,13 +144,6 @@ export default {
             this.fetchData();
         }
     },
-    created() {
-        //axios.get('http://127.0.0.1:8000/api/laboratory/all_orders/').then(response =>{
-        //    console.log(response.data);
-        //})
-
-        //axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-    }
 };
 </script>
 

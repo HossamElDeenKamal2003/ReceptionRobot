@@ -197,7 +197,6 @@ export default {
         this.pathId = id;
         this.code = id;
         console.log(id);
-        if (this.doctorId) {
             // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
             axios.get(`http://45.93.138.72:3000/labs/contract/${id}`,{
                     headers: {
@@ -209,7 +208,6 @@ export default {
                 }).catch(error => {
                     console.log(error);
                 })
-        }
         if (this.$route.path !== "/contact") {
             this.button = "Update";
             console.log(this.$route.path);

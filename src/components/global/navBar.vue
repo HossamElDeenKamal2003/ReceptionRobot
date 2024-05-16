@@ -72,6 +72,7 @@ export default {
                 this.username = "";
                 this.id = "";
                 this.$router.push('/')
+                
                 // Redirect the user to a login page or any other appropriate page
                 // In this example, I'm redirecting to the home page
                 //this.$router.push('/login');
