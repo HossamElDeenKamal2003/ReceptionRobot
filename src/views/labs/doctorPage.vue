@@ -93,16 +93,17 @@ export default {
         }
     },
     created() {
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+        this.fetchDoctors();
+        //axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
     },
     mounted() {
-        const username = localStorage.getItem('username');
-        if (username !== '' && username !== null) { // Check if username is not empty and not null
-            this.fetchDoctors(); // Call fetchDoctors() method instead of fetchData()
-            setInterval(() => {
-                this.fetchDoctors(); // Call fetchDoctors() method instead of fetchData()
-            }, 300000);
-        }
+        //const username = localStorage.getItem('username');
+        // if (username !== '' && username !== null) { // Check if username is not empty and not null
+        //     this.fetchDoctors(); // Call fetchDoctors() method instead of fetchData()
+        //     setInterval(() => {
+        //         this.fetchDoctors(); // Call fetchDoctors() method instead of fetchData()
+        //     }, 1000);
+        // }
     },
 }
 </script>
