@@ -129,23 +129,23 @@ export default {
                 //     study_model: parseFloat(this.contract.study_model),
                 //     snap_on_smile: parseFloat(this.contract.snap_on_smile)
                 // };
-                axios.put(`http://45.93.138.72:3000/labs/contract/${id}`, {
+                axios.put(`https://api.receptionrobot.net/labs/contract/${id}`, {
                         contract:{
-                        zircon_wave: this.contract.zircon_wave,
-                        zircon_dental_direct: this.contract.zircon_dental_direct,
-                        zircon_emax_prime_ivoclar: this.contract.zircon_emax_prime_ivoclar,
-                        impress_crown: this.contract.impress_crown,
-                        impress_intaly: this.contract.impress_intaly,
-                        impress_onlay: this.contract.impress_onlay,
-                        impress_overlay: this.contract.impress_overlay,
-                        pfm: this.contract.pfm,
-                        implant_zircon: this.contract.implant_zircon,
-                        implant_pfm: this.contract.implant_pfm,
-                        night_gard: this.contract.night_gard,
-                        night_white: this.contract.night_white,
-                        retainer: this.contract.retainer,
-                        study_model: this.contract.study_model,
-                        snap_on_smile: this.contract.snap_on_smile
+                            zircon_wave: this.contract.zircon_wave,
+                            zircon_dental_direct: this.contract.zircon_dental_direct,
+                            zircon_emax_prime_ivoclar: this.contract.zircon_emax_prime_ivoclar,
+                            impress_crown: this.contract.impress_crown,
+                            impress_intaly: this.contract.impress_intaly,
+                            impress_onlay: this.contract.impress_onlay,
+                            impress_overlay: this.contract.impress_overlay,
+                            pfm: this.contract.pfm,
+                            implant_zircon: this.contract.implant_zircon,
+                            implant_pfm: this.contract.implant_pfm,
+                            night_gard: this.contract.night_gard,
+                            night_white: this.contract.night_white,
+                            retainer: this.contract.retainer,
+                            study_model: this.contract.study_model,
+                            snap_on_smile: this.contract.snap_on_smile
                     }},
                     {
                     headers: {
@@ -155,7 +155,7 @@ export default {
                 }).then(response => {
                     console.log(response.data)
                     console.log("contract sent successfully");
-                    this.$router='/doctorLab';
+                    this.$router.push='/doctorLab';
                 }).catch(error => {
                     console.log(error);
                 })
@@ -198,7 +198,7 @@ export default {
         this.code = id;
         console.log(id);
             // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-            axios.get(`http://45.93.138.72:3000/labs/contract/${id}`,{
+            axios.get(`https://api.receptionrobot.net/labs/contract/${id}`,{
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token'),
                     }

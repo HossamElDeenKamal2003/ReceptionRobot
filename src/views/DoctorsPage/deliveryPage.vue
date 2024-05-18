@@ -107,7 +107,7 @@ export default {
         },
         filterunderway() {
             this.fetchingData = false; // Stop fetching data
-            axios.get('http://127.0.0.1:8000/api/doctor/all_orders/?status=u').then(response => {
+            axios.get('https://api.receptionrobot.net/api/doctor/all_orders/?status=u').then(response => {
                 this.orders = response.data;
                 this.orders.forEach(order => {
                     order.status = "UnderWay";
@@ -119,7 +119,7 @@ export default {
         },
         filterend() {
             this.fetchingData = false; // Stop fetching data
-            axios.get('http://127.0.0.1:8000/api/doctor/all_orders/?status=e').then(response => {
+            axios.get('https://api.receptionrobot.net/api/doctor/all_orders/?status=e').then(response => {
                 this.orders = response.data;
                 this.orders.forEach(order => {
                     order.status = "End";
@@ -139,7 +139,7 @@ export default {
                 return;
             }
             if(this.fetchingData){
-            axios.get('http://45.93.138.72:3000/doctors/orders',{
+            axios.get('https://api.receptionrobot.net/doctors/orders',{
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -174,7 +174,7 @@ export default {
         }
 
         axios
-            .patch(`http://localhost:8000/api/delete_order/${orderId}/`)
+            .patch(`https://api.receptionrobot.net/api/delete_order/${orderId}/`)
             .then((response) => {
             console.log(response);
             // Assuming response is successful, update your local data

@@ -470,7 +470,7 @@ export default {
         },
         getCurrentLocationAndSubmit(event) {
             event.preventDefault();
-                let createUser_API = 'http://45.93.138.72:3000/users/signup';
+                let createUser_API = 'https://api.receptionrobot.net/users/signup';
                 axios.post(createUser_API, {
                         "username": this.signUp.usernameSign,
                         "phone":this.signUp.phoneNumber,
@@ -481,7 +481,6 @@ export default {
                         "email": this.signUp.Email,
                         "role":this.signUp.role
                 }).then((response) => {
-                      console.log(response.data);
                       localStorage.setItem('token', response.data.token);
                       localStorage.setItem('username', response.data.user.username);
                       localStorage.setItem('id', response.data.user.UID);
@@ -518,7 +517,7 @@ export default {
         },
         Login(e) {
             e.preventDefault();
-            axios.post('http://45.93.138.72:3000/users/login', {
+            axios.post('https://api.receptionrobot.net/users/login', {
                 username: this.login.usernameLog,
                 password: this.login.passwordLog,
             }).then(response => {

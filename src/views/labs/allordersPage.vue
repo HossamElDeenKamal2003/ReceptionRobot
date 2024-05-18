@@ -163,7 +163,7 @@ export default {
     const role = localStorage.getItem('role');
     if(this.flag === true){
       if (role === 'LAB') {
-      axios.get('http://45.93.138.72:3000/labs/orders', {
+      axios.get('https://api.receptionrobot.net/labs/orders', {
         headers: {
           'Authorization': 'DEN ' + localStorage.getItem('token')
         }
@@ -186,7 +186,7 @@ export default {
     const role = localStorage.getItem('role');
     if (role === 'LAB') {
       const isUnderway = this.filteredOrders.find(order => order.UID === ID).status === 'Underway';
-      axios.patch(`http://45.93.138.72:3000/labs/orders/${ID}`, {
+      axios.patch(`https://api.receptionrobot.net/labs/orders/${ID}`, {
         status: isUnderway ? 'Ready' : 'Underway'
       }, {
         headers: {
@@ -205,7 +205,7 @@ export default {
   },
 
   update(id) {
-  axios.patch(`http://45.93.138.72:3000/labs/orders/paid/${id}`, {
+  axios.patch(`https://api.receptionrobot.net/labs/orders/paid/${id}`, {
     paid: this.filteredOrders.find(order => order._id === id).paid,
   }, {
     headers: {
@@ -219,7 +219,7 @@ export default {
   });
 },
 markOrder(orderId) {
-  axios.patch(`http://45.93.138.72:3000/labs/orders/${orderId}`, {}, {
+  axios.patch(`https://api.receptionrobot.net/labs/orders/${orderId}`, {}, {
     headers: {
       'Authorization': 'DEN ' + localStorage.getItem('token')
     }
@@ -242,7 +242,7 @@ markOrder(orderId) {
   const isSubscribed = localStorage.getItem('delSub') === 'true';
   const role = localStorage.getItem('role');
   if (role === 'LAB') {
-    axios.patch('http://45.93.138.72:3000/labs/public', {
+    axios.patch('https://api.receptionrobot.net/labs/public', {
       publicDelivery: !isSubscribed,
     }, {
       headers: {

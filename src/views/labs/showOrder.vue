@@ -273,7 +273,7 @@ export default {
     },
     created() {
     const orderId = this.$route.params.id; 
-    axios.get(`http://45.93.138.72:3000/labs/orders/${orderId}`, {
+    axios.get(`https://api.receptionrobot.net/labs/orders/${orderId}`, {
         headers: {
             'Authorization': 'DEN ' + localStorage.getItem('token')
         }

@@ -99,7 +99,7 @@
                 </div>
                 <div class="print&sub">
                     <div class="sub">
-                        <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div>
+                        <!-- <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div> -->
                         <button @click="preventSub" class="btn btn" title="Save" type="Submit">Submit</button>
                     </div>
                 </div>
@@ -193,7 +193,7 @@ export default {
                 this.chunks_to_send = []
                 formData.append('voiceNote', blob, 'voice.ogg');
             }
-            axios.post('http://45.93.138.72:3000/doctors/orders/add', formData, {
+            axios.post('https://api.receptionrobot.net/doctors/orders/add', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': 'DEN ' + localStorage.getItem('token'),
@@ -242,7 +242,7 @@ export default {
             this.startRecording()
         },
         printer() {
-            axios.get('http://45.93.138.72:3000/doctors/orders', {
+            axios.get('https://api.receptionrobot.net/doctors/orders', {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }

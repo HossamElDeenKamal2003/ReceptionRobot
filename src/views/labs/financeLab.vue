@@ -53,7 +53,7 @@ export default {
         fetchFinanceDate() {
             const username = localStorage.getItem('username');
             if(username !== '' && username !== null) {
-            axios.get('http://45.93.138.72:3000/labs/financial',{
+            axios.get('https://api.receptionrobot.net/labs/financial',{
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }

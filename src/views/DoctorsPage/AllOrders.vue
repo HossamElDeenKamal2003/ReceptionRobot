@@ -123,7 +123,7 @@ export default {
             }
             let ApiUrl;
             if (this.filterForSearch == "") {
-                ApiUrl = 'http://45.93.138.72:3000/doctors/orders'
+                ApiUrl = 'https://api.receptionrobot.net/doctors/orders'
             }
 
             axios.get(ApiUrl, {
