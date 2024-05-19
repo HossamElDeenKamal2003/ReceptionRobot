@@ -40,21 +40,21 @@
                     <h2>Snap On Smile</h2>
                 </div>
                 <div class="prices">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.zircon_wave">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.zircon_dental_direct">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.zircon_emax_prime_ivoclar">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.impress_crown">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.impress_intaly">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.impress_onlay">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.impress_overlay">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.pfm">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.implant_zircon">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.implant_pfm">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.night_gard">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.night_white">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.retainer">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.study_model">
-                    <input class="form-control" type="number" placeholder="Price" v-model="contract.snap_on_smile">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_wave">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_dental_direct">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_emax_prime_ivoclar">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_crown">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_intaly">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_onlay">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_overlay">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.pfm">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.implant_zircon">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.implant_pfm">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.night_gard">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.night_white">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.retainer">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.study_model">
+                    <input class="form-control" type="number" placeholder="Price" v-model.number="contract.snap_on_smile">
                 </div>
             </div>
             <div class="submit">
@@ -131,21 +131,21 @@ export default {
                 // };
                 axios.put(`https://api.receptionrobot.net/labs/contract/${id}`, {
                         contract:{
-                            zircon_wave: this.contract.zircon_wave,
-                            zircon_dental_direct: this.contract.zircon_dental_direct,
-                            zircon_emax_prime_ivoclar: this.contract.zircon_emax_prime_ivoclar,
-                            impress_crown: this.contract.impress_crown,
-                            impress_intaly: this.contract.impress_intaly,
-                            impress_onlay: this.contract.impress_onlay,
-                            impress_overlay: this.contract.impress_overlay,
-                            pfm: this.contract.pfm,
-                            implant_zircon: this.contract.implant_zircon,
-                            implant_pfm: this.contract.implant_pfm,
-                            night_gard: this.contract.night_gard,
-                            night_white: this.contract.night_white,
-                            retainer: this.contract.retainer,
-                            study_model: this.contract.study_model,
-                            snap_on_smile: this.contract.snap_on_smile
+                            zircon_wave: Number(this.contract.zircon_wave),
+                            zircon_dental_direct: Number(this.contract.zircon_dental_direct),
+                            zircon_emax_prime_ivoclar: Number(this.contract.zircon_emax_prime_ivoclar),
+                            impress_crown: Number(this.contract.impress_crown),
+                            impress_intaly: Number(this.contract.impress_intaly),
+                            impress_onlay: Number(this.contract.impress_onlay),
+                            impress_overlay: Number(this.contract.impress_overlay),
+                            pfm: Number(this.contract.pfm),
+                            implant_zircon: Number(this.contract.implant_zircon),
+                            implant_pfm: Number(this.contract.implant_pfm),
+                            night_gard: Number(this.contract.night_gard),
+                            night_white: Number(this.contract.night_white),
+                            retainer: Number(this.contract.retainer),
+                            study_model: Number(this.contract.study_model),
+                            snap_on_smile: Number(this.contract.snap_on_smile)
                     }},
                     {
                     headers: {
