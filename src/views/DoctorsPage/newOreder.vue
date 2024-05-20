@@ -88,6 +88,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="print&sub">
                     <div class="sub">
                         <!-- <div class="printer" @click="prepareAndPrint" title="Print"><i class="bi bi-printer"></i></div> -->
