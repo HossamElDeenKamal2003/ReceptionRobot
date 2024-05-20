@@ -115,13 +115,13 @@
                             <!-- <audio controls src="E:\masallab editversion\massalab\voice_records\voice_gftfJ7d.ogg"></audio> -->
                             <!-- <input type="file" class="hiddenInput" v-if="inputURL"/> -->
                         </div>
-                        <div class="controllers">
+                        <!-- <div class="controllers">
                             <button v-if="currentState === 'Initial'" @click="startRecording"
                                 class="btn btn-primary">Start
                                 Recording</button>
                             <button v-if="currentState === 'Record'" @click="stopRecording">Stop Recording</button>
                             <button v-if="currentState === 'Download'" @click="recordAgain">Record Again</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -283,6 +283,7 @@ export default {
             
         },
         printer(){
+            
             // document.getElementById('name').style.display = 'block';
             // document.getElementById('Age').style.display = 'block';
             // document.getElementById('numberTeeth').style.display = 'block';

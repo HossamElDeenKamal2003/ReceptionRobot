@@ -21,6 +21,9 @@
                     </select>
                 </div>
             </div>
+            <div>
+                <p v-text="addressDel" style="color:red"></p>
+            </div>
             <div class="data">
                 <table style="width:100%;">
                     <tr class="head">
@@ -107,6 +110,7 @@ export default {
             searchFilter: "",
             searchFilterType: "id",
             order_id: "",
+            addressDel:"",
         };
     },
     methods: {
@@ -133,7 +137,7 @@ export default {
             }
         },
         fetchData() {
-            axios.get('http://45.93.138.72:3000/deliverers/orders', {
+            axios.get('https://api.receptionrobot.net/deliverers/orders', {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -147,10 +151,10 @@ export default {
             });
         },
         addressDoc(buildingno, floorno, name, address) {
-            alert("Name : " + name + '\n' + "Address : " + address + '\n' + "Building Number : " + buildingno + '\n' + "Floor Number : " + floorno);
+            this.addressDel = ("Name : " + name + " => " + "Address : " + address + ' => ' + "Building Number : " + buildingno + ' => ' + "Floor Number : " + floorno);
         },
         filterend() {
-            axios.get('http://45.93.138.72:3000/deliverers/orders/myOrders', {
+            axios.get('https://api.receptionrobot.net/deliverers/orders/myOrders', {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -167,53 +171,41 @@ export default {
                     }
                 });
         },
-        // takeOrder(id) {
-        //     axios.patch(`http://45.93.138.72:3000/deliverers/orders/otw/${id}`, {}, {
-        //         headers: {
-        //             'Authorization': 'DEN ' + localStorage.getItem('token')
-        //         }
-        //     })
-        // },
-        // underwaOrder(id){
-        //     axios.patch(`http://45.93.138.72:3000/deliverers/orders/lab/delivered/${id}`,{},{
-        //         headers: {
-        //             'Authorization': 'DEN ' + localStorage.getItem('token')
-        //         }
-        //     })
-        // }
         takeOrder(order) {
             if (order.status === 'DocReady' || order.status === 'LabReady') {
-                axios.patch(`http://45.93.138.72:3000/deliverers/orders/otw/${order._id}`, {}, {
+                axios.patch(`https://api.receptionrobot.net/deliverers/orders/otw/${order._id}`, {}, {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
                 }).then(() => {
+                    this.searchTerm = '';
                     this.fetchData();
                 }).catch((error) => {
                     console.error('Error taking order:', error);
                 });
             } else if (order.status === 'OTW_LAB') {
-                axios.patch(`http://45.93.138.72:3000/deliverers/orders/lab/delivered/${order._id}`, {}, {
+                axios.patch(`https://api.receptionrobot.net/deliverers/orders/lab/delivered/${order._id}`, {}, {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
                 }).then(() => {
-                    this.fetchData();
+                    this.searchTerm = '';
+                    this.filterend();
                 }).catch((error) => {
                     console.error('Error delivering order:', error);
                 });
             }else if(order.status === 'OTW_DOC'){
-                axios.patch(`http://45.93.138.72:3000/deliverers/orders/doc/delivered/${order._id}`,{},{
+                axios.patch(`https://api.receptionrobot.net/deliverers/orders/doc/delivered/${order._id}`,{},{
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
                 }).then(()=>{
-                    this.fetchData();
+                    this.searchTerm = '';
+                    this.filterend();
                 })
             }
         }
     },
-
     created() {
         this.fetchData();
     }

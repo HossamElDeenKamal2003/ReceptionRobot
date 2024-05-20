@@ -3,9 +3,9 @@
         <navBar />
         <div class="finance">
             <div class="data">
-                <div class="calender">
-                    <input type="date" v-model="startDate">
-                    <input type="date" v-model="endDate">
+                <div class="calender" style="margin-top:20px">
+                    <!-- <input type="date" v-model="startDate">
+                    <input type="date" v-model="endDate"> -->
                     <button :disabled="isUsernameEmptyOrNull" @click="fetchFinanceDate">Fetch Data</button>
                 </div>
                 <div class="head">

@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <navNoAnmi />
-    <audio ref="ringSound" src="@/assets/ring.mp3" preload="auto"></audio>
+    <!-- <audio ref="ringSound" src="@/assets/ring.mp3" preload="auto"></audio> -->
     <div class="sidebar" :class="{ active: isActiveSidebar }">
       <router-link to="/allOrderslabs" style="text-decoration: underline"
         >All Orders <span>{{ diffrence }}</span> </router-link
@@ -227,6 +227,7 @@ markOrder(orderId) {
   .then(response => {
     this.end_order = true; // Assuming you want to set a flag indicating that the order has been marked
     console.log('Order marked successfully:', response.data);
+    this.fetchData();
   })
   .catch(error => {
     if (error.response && error.response.status === 400) {
@@ -248,7 +249,7 @@ markOrder(orderId) {
       headers: {
         'Authorization': 'DEN ' + localStorage.getItem('token')
       }
-    }).then(response => {
+    }).then(() => {
       if (!isSubscribed) {
         this.message_sub = "Unsubscribe from Delivery";
         localStorage.setItem('delSub', 'true');
@@ -256,7 +257,7 @@ markOrder(orderId) {
         this.message_sub = "Subscribe in Delivery";
         localStorage.setItem('delSub', 'false');
       }
-      console.log(response.data);
+      //console.log(response.data);
     }).catch(error => {
       console.error('An error occurred:', error.message);
     });

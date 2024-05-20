@@ -1,13 +1,12 @@
 <template>
+    <p v-if="UID">{{ }}</p>
     <section class="all-orders">
         <div class="sidebar" :class="{ 'active': isActiveSidebar }">
             <router-link to="/newOrder" style="text-decoration: underline;">New Order</router-link>
             <router-link to="/allorders">All Orders</router-link>
-            <!-- <router-link to="/delievry">Delievery</router-link> -->
-            <!-- <router-link to="/finance">Finance</router-link> -->
         </div>
         <div class="content" style="overflow:auto;">
-            <form action="">
+            <form @submit.prevent="preventSub">
                 <div class="basic-info">
                     <div>
                         <label for="name">Patient Name : </label>
@@ -85,27 +84,18 @@
                     <div class="container">
                         <div class="display">
                             <p>{{ message }}</p>
-                            <!-- <audio controls v-if="audioURL" :src="audioURL" @change="handleAudioFileChange"></audio> -->
                             <input type="file" class="hiddenInput" v-if="audioURL" @change="handleAudioFileChange" />
-                        </div>
-                        <div class="controllers">
-                            <button v-if="currentState === 'Initial'" @click="startRecording"
-                                class="btn btn-primary">Start
-                                Recording</button>
-                            <button v-if="currentState === 'Record'" @click="stopRecording">Stop Recording</button>
-                            <button v-if="currentState === 'Download'" @click="recordAgain">Record Again</button>
                         </div>
                     </div>
                 </div>
                 <div class="print&sub">
                     <div class="sub">
-                        <!-- <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div> -->
-                        <button @click="preventSub" class="btn btn" title="Save" type="Submit">Submit</button>
+                        <!-- <div class="printer" @click="prepareAndPrint" title="Print"><i class="bi bi-printer"></i></div> -->
+                        <button class="btn btn" title="Save" type="Submit">Submit</button>
                     </div>
                 </div>
             </form>
         </div>
-        
     </section>
     <div id="contentPrint">
         {{ UID }}
@@ -139,7 +129,133 @@ export default {
             totalPrice: "",
             doc_id: "",
             orders: [],
-            UID:"",
+            UID: "",
+        };
+    },
+
+    mounted() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    this.mediaRecorder = new MediaRecorder(stream)
+                    this.mediaRecorder.ondataavailable = e => this.chunks.push(e.data)
+                    this.mediaRecorder.onstop = () => {
+                        const blob = new Blob(this.chunks, { type: 'audio/ogg; codecs=opus' })
+                        this.chunks_to_send = this.chunks
+                        this.chunks = []
+                        this.audioURL = window.URL.createObjectURL(blob)
+                    }
+                })
+                .catch(error => {
+                    console.log('Following error has occurred:', error)
+                })
+        } else {
+            this.currentState = ''
+            this.message = 'Your browser does not support mediaDevices'
+        }
+    },
+    methods: {
+        checkName() {
+            const name = this.Patientname;
+            return name !== "";
+        },
+        handleAudioFileChange(event) {
+            this.audioFile = event.target.files[0];
+            this.inputURL = this.audioFile;
+            console.log(this.inputURL);
+        },
+        preventSub(e) {
+            e.preventDefault();
+            if (this.Patientname.trim() === "" || this.Age.trim() === "" || this.numberofteeth.trim() === "") {
+                alert("Please fill patient name, age and number of teeth");
+                return;
+            }
+            const formData = new FormData();
+            formData.append('patientName', this.Patientname);
+            formData.append('age', this.Age);
+            formData.append('color', this.Toothcolor);
+            formData.append('sex', this.sex);
+            formData.append('teethNo', this.numberofteeth);
+            formData.append('description', this.note);
+            formData.append('type', this.type);
+            if (this.audioURL) {
+                const blob = new Blob(this.chunks_to_send, { type: 'audio/ogg' })
+                this.chunks_to_send = []
+                formData.append('voiceNote', blob, 'voice.ogg');
+            }
+            axios.post('https://api.receptionrobot.net/doctors/orders/add', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'DEN ' + localStorage.getItem('token'),
+                }
+            }).then((response) => {
+                alert("order sent successfully");
+                console.log(formData);
+                console.log(response.data);
+                this.$router.go();
+            }).catch(error => {
+                console.error("Error fetching data:", error);
+                if (error.response.status === 400) {
+                    alert("Doctor not registered on a lab");
+                } else {
+                    alert("An error occurred while sending the order. Please try again.");
+                }
+            })
+        },
+        fetchUID() {
+            axios.get('https://api.receptionrobot.net/doctors/orders/', {
+                headers: {
+                    'Authorization': 'DEN ' + localStorage.getItem('token'),
+                }
+            }).then(response => {
+                this.UID = response.data.reverse()[0].UID;
+                console.log(this.UID);
+            }).catch(error => {
+                console.error("Error fetching UID:", error);
+            });
+        },
+        async prepareAndPrint() {
+            try {
+                await this.fetchUID();
+                this.$nextTick(() => {
+                    window.print();
+                });
+            } catch (error) {
+                console.error("Error preparing for print:", error);
+            }
+        },
+    },
+}
+</script>
+
+<!-- <script>
+import axios from 'axios';
+export default {
+    name: "newOrder",
+    data() {
+        return {
+            isActiveSidebar: false,
+            users: [],
+            Patientname: "",
+            errorName: "",
+            Age: "",
+            sex: "",
+            numberofteeth: "",
+            Toothcolor: "",
+            type: "",
+            note: "",
+            currentState: 'Initial',
+            message: '',
+            mediaRecorder: null,
+            chunks: [],
+            chunks_to_send: [],
+            audioURL: '',
+            inputURL: "",
+            contract: {},
+            totalPrice: "",
+            doc_id: "",
+            orders: [],
+            UID: "",
         };
     },
 
@@ -241,7 +357,23 @@ export default {
             this.audioURL = ''
             this.startRecording()
         },
-        printer() {
+        // fetchOrders() {
+        //     axios
+        //         .get("https://api.receptionrobot.net/doctors/orders", {
+        //             headers: {
+        //                 Authorization: "DEN " + localStorage.getItem("token"),
+        //             },
+        //         })
+        //         .then((response) => {
+        //             this.orders = response.data;
+        //             this.orders.reverse();
+        //             this.UID = this.orders[0].UID;
+        //         })
+        //         .catch((error) => {
+        //             console.error("Error fetching orders:", error);
+        //         });
+        // },
+        printer(id) {
             axios.get('https://api.receptionrobot.net/doctors/orders', {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
@@ -249,14 +381,26 @@ export default {
             }).then(response => {
                 this.orders = response.data;
                 this.orders.reverse();
-                console.log(this.orders[0].UID);
-                this.UID = this.orders[0].UID; // Set the UID data property
-                window.print(this.UID); // Trigger the print dialog
+                this.UID = this.orders[0].UID;
+                console.log(this.UID);
+                this.$nextTick(() => {
+                    window.print(id);
+                }); // Trigger the print dialog after DOM update
             }).catch(error => {
                 console.error("Error fetching orders:", error);
             });
         }
+        // printer(){
 
+        //     // document.getElementById('name').style.display = 'block';
+        //     // document.getElementById('Age').style.display = 'block';
+        //     // document.getElementById('numberTeeth').style.display = 'block';
+        //     // document.getElementById('').style.display = 'block';
+        //     //sex
+        //     //colors
+        //     // Print the content
+        //     window.print();
+        // },
     },
 
     created() {
@@ -279,7 +423,7 @@ export default {
     },
 
     watch: {
-        type(){
+        type() {
             console.log(this.type);
         },
         totalPrice() {
@@ -287,15 +431,34 @@ export default {
         }
     }
 };
-</script>
+</script> -->
 <style scoped>
 @media print {
-    .all-orders{
+    .sidebar {
         display: none;
     }
-    .contentPrint {
+
+    .content {
+        position: absolute;
+        width: 90%;
+        left: -20%;
+        top: 0;
+    }
+
+    button,
+    i {
+        display: none;
+    }
+
+    #contentPrint {
         display: block;
     }
+
+}
+
+#contentPrint {
+    display: none;
+    color: red;
 }
 
 .contentPrint {
