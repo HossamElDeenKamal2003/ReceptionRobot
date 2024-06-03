@@ -1,12 +1,14 @@
 <template>
     <div>
-        <navBar />
+        <NavBar />
         <div class="finance">
             <div class="data">
-                <div class="calender" style="margin-top:20px">
-                    <!-- <input type="date" v-model="startDate">
-                    <input type="date" v-model="endDate"> -->
-                    <button :disabled="isUsernameEmptyOrNull" @click="fetchFinanceDate">Fetch Data</button>
+                <div class="calendar" style="margin-top:20px">
+                    <label>From</label>
+                    <input type="date" v-model="startDate">
+                    <label>To</label>
+                    <input type="date" v-model="endDate">
+                    <button :disabled="isFetchDisabled" @click="fetchFinanceData">Fetch Data</button>
                 </div>
                 <div class="head">
                     <p>Doctor Name</p>
@@ -29,57 +31,62 @@
 </template>
 
 <script>
-import navBar from "@/components/global/navBar.vue";
+import NavBar from "@/components/global/navBar.vue";
 import axios from 'axios';
+
 export default {
-    name: "financeLab",
+    name: "FinanceLab",
     components: {
-        navBar,
+        NavBar,
     },
     data() {
         return {
-            startDate: '',
-            endDate: '',
+            startDate: null,
+            endDate: null,
             doctorData: [],
         }
     },
     computed: {
-        isUsernameEmptyOrNull() {
-        const username = localStorage.getItem('username');
-        return username === '' || username === null;
+        isFetchDisabled() {
+            return !this.startDate || !this.endDate;
         }
     },
     methods: {
-        fetchFinanceDate() {
-            const username = localStorage.getItem('username');
-            if(username !== '' && username !== null) {
-            axios.get('https://api.receptionrobot.net/labs/financial',{
-                headers: {
-                    'Authorization': 'DEN ' + localStorage.getItem('token')
-                }
+        fetchFinanceData() {
+        const token = localStorage.getItem('token');
+        console.log('Token:', token); // Log the token to ensure it's correct
+        axios.get('https://dentist-labs.onrender.com/labs/financial', {
+            params: {
+                startDate: this.startDate,
+                endDate: this.endDate
+            },
+            headers: {
+                'Authorization': 'DEN ' + token
             }
-            ).then(response => {
-                console.log(response.data);
+        }).then(response => {
+            console.log(response.data);
+            this.doctorData = response.data.map(doctor => ({
+                doctorName: doctor.doctorName,
+                orderCount: doctor.orderCount,
+                totalPaid: doctor.totalPaid,
+                price: doctor.totalPrice
+            }));
+        }).catch(error => {
+            console.error('Error fetching finance data:', error);
+            if (error.response && error.response.status === 401) {
+                alert('Unauthorized access. Please check your token.');
+            } else {
                 this.doctorData = [];
-                response.data.forEach(doctor => {
-                this.doctorData.push({
-                    doctorName: doctor.doctorName, 
-                    orderCount: doctor.orderCount, 
-                    totalPaid: doctor.totalPaid, 
-                    price: doctor.totalPrice
-                });
-                });
-            }).catch(error => {
-                console.log(error);
-            });
             }
-        },
+        });
+    }
     },
-    created() {
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+    created(){
+        console.log(localStorage.getItem('token')); 
     }
 }
 </script>
+
 <style scoped>
 .finance {
     background: rgb(2, 0, 36);

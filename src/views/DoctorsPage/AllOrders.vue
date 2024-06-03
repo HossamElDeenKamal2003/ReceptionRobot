@@ -108,13 +108,13 @@ export default {
             this.filteredOrders = this.orders;
         },
         filterunderway() {
-            this.filteredOrders = this.orders.filter(order => order.status === "Underway");
+            this.filteredOrders = this.orders.filter(order => order.status === "UNDERWAY(P)"||order.status === "UNDERWAY(F)");
         },
         filterend() {
-            this.filteredOrders = this.orders.filter(order => order.status === "End");
+            this.filteredOrders = this.orders.filter(order => order.status === "End(P)"||order.status === "End(F)");
         },
         filterReady() {
-            this.filteredOrders = this.orders.filter(order => order.status === "Ready");
+            this.filteredOrders = this.orders.filter(order => order.status === "DocReady(P)"||order.status==="LabReady(F)");
         },
 
         fetchData() {
@@ -123,7 +123,7 @@ export default {
             }
             let ApiUrl;
             if (this.filterForSearch == "") {
-                ApiUrl = 'https://api.receptionrobot.net/doctors/orders'
+                ApiUrl = 'https://dentist-labs.onrender.com/doctors/orders'
             }
 
             axios.get(ApiUrl, {

@@ -49,7 +49,6 @@
 </template>
 
 <script>
-//import axios from 'axios';
 export default {
     name: 'headerPage',
     data() {
@@ -71,8 +70,12 @@ export default {
                 // Reset the username and id displayed in the navbar
                 this.username = "";
                 this.id = "";
-                this.$router.push('/')
-                
+                this.role ="";
+                this.token = "";
+                this.$router.push('/').then(() => {
+                    this.$router.go(0);
+                });
+
                 // Redirect the user to a login page or any other appropriate page
                 // In this example, I'm redirecting to the home page
                 //this.$router.push('/login');
@@ -82,7 +85,7 @@ export default {
             // Clear user authentication state, for example by removing tokens or clearing local storage
             // In this example, I'm clearing localStorage
             
-        }
+        },
     },
     created() {
         if (localStorage.getItem('username') && localStorage.getItem('id') && localStorage.getItem('role')) {

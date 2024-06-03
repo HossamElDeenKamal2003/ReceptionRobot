@@ -108,12 +108,6 @@
             </div>
             <button @click="getCurrentLocationAndSubmit">Signup</button>
           </form>
-          <!-- <span>or signup with</span>
-          <div class="socials">
-            <i class="fab fa-facebook-f"></i>
-            <i class="fab fa-google-plus-g"></i>
-            <i class="fab fa-linkedin-in"></i>
-          </div> -->
         </div>
         <div class="form-control signin-form">
           <form action="#">
@@ -133,12 +127,6 @@
             />
             <button @click="Login">Signin</button>
           </form>
-          <!-- <span>or signin with</span> -->
-          <!-- <div class="socials">
-                        <i class="fab fa-facebook-f"></i>
-                        <i class="fab fa-google-plus-g"></i>
-                        <i class="fab fa-linkedin-in"></i>
-                    </div> -->
         </div>
       </div>
       <div class="intros-container">
@@ -470,7 +458,7 @@ export default {
         },
         getCurrentLocationAndSubmit(event) {
             event.preventDefault();
-                let createUser_API = 'https://api.receptionrobot.net/users/signup';
+                let createUser_API = 'https://dentist-labs.onrender.com/users/signup';
                 axios.post(createUser_API, {
                         "username": this.signUp.usernameSign,
                         "phone":this.signUp.phoneNumber,
@@ -491,33 +479,10 @@ export default {
                         alert("Please enter all data");
                       }
                     }))
-                    // axios.post('http://45.93.138.72:3000/users/login', {
-                    //     username: this.signUp.usernameSign,
-                    //     password: this.signUp.passwordSign
-                    // }).then(response => {
-                    //     localStorage.setItem('token', response.data.token);
-                    //     localStorage.setItem('username', response.data.user);
-                    //     localStorage.setItem('id', response.data.id);
-                    //     this.$router.push('/')
-                    // }).catch(error => {
-                    //     console.log(error);
-                    // });
-                    // console.log("loginSuccessfully");
-                // }).catch(error => {
-                //     console.log(error);
-                    //alert(error.response.data);
-                    // this.usernameError = error.response.data.username[0];
-                    // this.passwordError = error.response.data.password[0];
-                    // this.emailError = error.response.data.email[0];
-                    // this.numberofroofError = error.response.data.numberofroof[0];
-                    // this.numberofroof = error.response.data.numberofroof
-                    // this.phoneNumberError = error.response.data.phoneNumber[0];
-                
-            // }
         },
         Login(e) {
             e.preventDefault();
-            axios.post('https://api.receptionrobot.net/users/login', {
+            axios.post('https://dentist-labs.onrender.com/users/login', {
                 username: this.login.usernameLog,
                 password: this.login.passwordLog,
             }).then(response => {
@@ -536,7 +501,7 @@ export default {
                     alert('Incorrect username or password. Please try again.');
                 } else {
                     // Other errors
-                    alert('An error occurred while logging in. Please try again later.');
+                    alert('An error occurred while logging in. Please try again later try check your internet connection');
                 }
             });
         },

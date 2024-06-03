@@ -1,5 +1,4 @@
 <template>
-    <p v-if="UID">{{ }}</p>
     <section class="all-orders">
         <div class="sidebar" :class="{ 'active': isActiveSidebar }">
             <router-link to="/newOrder" style="text-decoration: underline;">New Order</router-link>
@@ -78,29 +77,37 @@
                     </div>
                 </div>
                 <div class="teethImage" style="width:100%; margin-top:2%;">
-                    <img src="@/assets/teeth.jpg" alt="Teeth Image" width="100%" height="50%">
+                    <img src="@/assets/illustrateTeethimage.png" alt="Teeth Image" width="100%" height="50%">
                     <label>Requirments</label>
                     <textarea name="" id="" style="overflow:auto; width:100%; height: 25%" v-model="note"></textarea>
                     <div class="container">
                         <div class="display">
                             <p>{{ message }}</p>
-                            <input type="file" class="hiddenInput" v-if="audioURL" @change="handleAudioFileChange" />
                         </div>
                     </div>
                 </div>
-                
+                <label for="images">Images</label>
+                <div class="images" id="images">
+                    <input type="file" name="image" id="image" accept="image/*" @change="handleImageChange">
+                    <input type="file" name="image1" id="image1" accept="image/*" @change="handleImageChange1">
+                    <input type="file" name="image2" id="image2" accept="image/*" @change="handleImageChange2">
+                </div>
+                <label for="video">Video</label>
+                <div class="video" id="video">
+                    <input type="file" name="image" id="image" accept="video/*" @change="handleImageChangeVideo">
+                </div>
+                <div class="screen">
+                    <label for="file">Screen Device</label>
+                    <input type="file" name="file" id="file" @change="handleFile">
+                </div>
                 <div class="print&sub">
                     <div class="sub">
-                        <!-- <div class="printer" @click="prepareAndPrint" title="Print"><i class="bi bi-printer"></i></div> -->
                         <button class="btn btn" title="Save" type="Submit">Submit</button>
                     </div>
                 </div>
             </form>
         </div>
     </section>
-    <div id="contentPrint">
-        {{ UID }}
-    </div>
 </template>
 
 <script>
@@ -122,48 +129,52 @@ export default {
             currentState: 'Initial',
             message: '',
             mediaRecorder: null,
-            chunks: [],
-            chunks_to_send: [],
             audioURL: '',
             inputURL: "",
             contract: {},
             totalPrice: "",
             doc_id: "",
-            orders: [],
-            UID: "",
+            images: [],
+            imagePreviews: [],
+            image: null,
+            image1: null,
+            image2: null,
+            specdesc:"",
+            video:null,
+            file: null,
         };
     },
-
-    mounted() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    this.mediaRecorder = new MediaRecorder(stream)
-                    this.mediaRecorder.ondataavailable = e => this.chunks.push(e.data)
-                    this.mediaRecorder.onstop = () => {
-                        const blob = new Blob(this.chunks, { type: 'audio/ogg; codecs=opus' })
-                        this.chunks_to_send = this.chunks
-                        this.chunks = []
-                        this.audioURL = window.URL.createObjectURL(blob)
-                    }
-                })
-                .catch(error => {
-                    console.log('Following error has occurred:', error)
-                })
-        } else {
-            this.currentState = ''
-            this.message = 'Your browser does not support mediaDevices'
-        }
-    },
     methods: {
+        handleFileChange(event) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                this.images.push(file);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imagePreviews.push(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+        handleImageChange(event) {
+            this.image = event.target.files[0];
+        }, 
+        handleImageChange1(event) {
+            this.image1 = event.target.files[0];
+        },
+        handleImageChange2(event) {
+            this.image2 = event.target.files[0];
+        },
+        handleImageChangeVideo(event){
+            this.video = event.target.files[0];
+        },
+        handleFile(event){
+            this.file = event.target.files[0];
+        },
         checkName() {
             const name = this.Patientname;
             return name !== "";
-        },
-        handleAudioFileChange(event) {
-            this.audioFile = event.target.files[0];
-            this.inputURL = this.audioFile;
-            console.log(this.inputURL);
         },
         preventSub(e) {
             e.preventDefault();
@@ -179,12 +190,15 @@ export default {
             formData.append('teethNo', this.numberofteeth);
             formData.append('description', this.note);
             formData.append('type', this.type);
-            if (this.audioURL) {
-                const blob = new Blob(this.chunks_to_send, { type: 'audio/ogg' })
-                this.chunks_to_send = []
-                formData.append('voiceNote', blob, 'voice.ogg');
-            }
-            axios.post('https://api.receptionrobot.net/doctors/orders/add', formData, {
+            // this.images.forEach((image) => {
+            //     formData.append('images[]', image);
+            // });
+            formData.append('image', this.image);
+            formData.append('image1', this.image1);
+            formData.append('image2', this.image2);
+            formData.append('video', this.video);
+            formData.append('file', this.file);
+            axios.post('https://dentist-labs.onrender.com/doctors/orders/add', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': 'DEN ' + localStorage.getItem('token'),
@@ -193,7 +207,7 @@ export default {
                 alert("order sent successfully");
                 console.log(formData);
                 console.log(response.data);
-                this.$router.go();
+                //this.$router.go();
             }).catch(error => {
                 console.error("Error fetching data:", error);
                 if (error.response.status === 400) {
@@ -203,240 +217,14 @@ export default {
                 }
             })
         },
-        fetchUID() {
-            axios.get('https://api.receptionrobot.net/doctors/orders/', {
-                headers: {
-                    'Authorization': 'DEN ' + localStorage.getItem('token'),
-                }
-            }).then(response => {
-                this.UID = response.data.reverse()[0].UID;
-                console.log(this.UID);
-            }).catch(error => {
-                console.error("Error fetching UID:", error);
-            });
-        },
-        async prepareAndPrint() {
-            try {
-                await this.fetchUID();
-                this.$nextTick(() => {
-                    window.print();
-                });
-            } catch (error) {
-                console.error("Error preparing for print:", error);
-            }
-        },
     },
+
 }
 </script>
-
-<!-- <script>
-import axios from 'axios';
-export default {
-    name: "newOrder",
-    data() {
-        return {
-            isActiveSidebar: false,
-            users: [],
-            Patientname: "",
-            errorName: "",
-            Age: "",
-            sex: "",
-            numberofteeth: "",
-            Toothcolor: "",
-            type: "",
-            note: "",
-            currentState: 'Initial',
-            message: '',
-            mediaRecorder: null,
-            chunks: [],
-            chunks_to_send: [],
-            audioURL: '',
-            inputURL: "",
-            contract: {},
-            totalPrice: "",
-            doc_id: "",
-            orders: [],
-            UID: "",
-        };
-    },
-
-    mounted() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    this.mediaRecorder = new MediaRecorder(stream)
-                    this.mediaRecorder.ondataavailable = e => this.chunks.push(e.data)
-                    this.mediaRecorder.onstop = () => {
-                        const blob = new Blob(this.chunks, { type: 'audio/ogg; codecs=opus' })
-                        this.chunks_to_send = this.chunks
-                        this.chunks = []
-                        this.audioURL = window.URL.createObjectURL(blob)
-                    }
-                })
-                .catch(error => {
-                    console.log('Following error has occurred:', error)
-                })
-        } else {
-            this.currentState = ''
-            this.message = 'Your browser does not support mediaDevices'
-        }
-    },
-    methods: {
-        checkName() {
-            const name = this.Patientname;
-            return name !== "";
-        },
-        handleAudioFileChange(event) {
-            this.audioFile = event.target.files[0];
-            this.inputURL = this.audioFile;
-            console.log(this.inputURL);
-        },
-        preventSub(e) {
-            e.preventDefault();
-            if (this.Patientname.trim() === "" || this.Age.trim() === "" || this.numberofteeth.trim() === "") {
-                alert("Please fill patient name, age and number of teeth");
-                return;
-            }
-            const formData = new FormData();
-            formData.append('patientName', this.Patientname);
-            formData.append('age', this.Age);
-            formData.append('color', this.Toothcolor);
-            formData.append('sex', this.sex);
-            formData.append('teethNo', this.numberofteeth);
-            formData.append('description', this.note);
-            formData.append('type', this.type);
-            if (this.audioURL) {
-                const blob = new Blob(this.chunks_to_send, { type: 'audio/ogg' })
-                this.chunks_to_send = []
-                formData.append('voiceNote', blob, 'voice.ogg');
-            }
-            axios.post('https://api.receptionrobot.net/doctors/orders/add', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': 'DEN ' + localStorage.getItem('token'),
-                }
-            }).then((response) => {
-                alert("order sent successfully");
-                console.log(formData);
-                console.log(response.data);
-                this.$router.go();
-            }).catch(error => {
-                console.error("Error fetching data:", error);
-                if (error.response.status === 400) {
-                    alert("Doctor not registered on a lab");
-                } else {
-                    alert("An error occurred while fetching data");
-                }
-            });
-            console.log("Form Data:", {
-                Patientname: this.Patientname,
-                Age: this.Age,
-                numberofteeth: this.numberofteeth,
-                Toothcolor: this.Toothcolor,
-                type: this.type,
-                sex: this.sex,
-                note: this.note,
-                audioFile: this.audioURL
-            });
-        },
-        findContractByType() {
-            return this.contract.find(item => item.type === this.type);
-        },
-
-        startRecording() {
-            this.currentState = 'Record'
-            this.mediaRecorder.start()
-            this.message = 'Recording...'
-        },
-        stopRecording() {
-            this.currentState = 'Download'
-            this.mediaRecorder.stop()
-            this.message = 'Voice Message';
-        },
-        recordAgain() {
-            this.currentState = 'Record'
-            this.audioURL = ''
-            this.startRecording()
-        },
-        // fetchOrders() {
-        //     axios
-        //         .get("https://api.receptionrobot.net/doctors/orders", {
-        //             headers: {
-        //                 Authorization: "DEN " + localStorage.getItem("token"),
-        //             },
-        //         })
-        //         .then((response) => {
-        //             this.orders = response.data;
-        //             this.orders.reverse();
-        //             this.UID = this.orders[0].UID;
-        //         })
-        //         .catch((error) => {
-        //             console.error("Error fetching orders:", error);
-        //         });
-        // },
-        printer(id) {
-            axios.get('https://api.receptionrobot.net/doctors/orders', {
-                headers: {
-                    'Authorization': 'DEN ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                this.orders = response.data;
-                this.orders.reverse();
-                this.UID = this.orders[0].UID;
-                console.log(this.UID);
-                this.$nextTick(() => {
-                    window.print(id);
-                }); // Trigger the print dialog after DOM update
-            }).catch(error => {
-                console.error("Error fetching orders:", error);
-            });
-        }
-        // printer(){
-
-        //     // document.getElementById('name').style.display = 'block';
-        //     // document.getElementById('Age').style.display = 'block';
-        //     // document.getElementById('numberTeeth').style.display = 'block';
-        //     // document.getElementById('').style.display = 'block';
-        //     //sex
-        //     //colors
-        //     // Print the content
-        //     window.print();
-        // },
-    },
-
-    created() {
-        if (localStorage.getItem('contract') !== "undefined") {
-            const storedContract = JSON.parse(localStorage.getItem('contract'));
-            if (storedContract) {
-                this.contract = storedContract;
-            }
-        }
-        // axios.get(`http://45.93.138.72:3000/labs/contract/${localStorage.getItem('id')}`, {
-        //     headers: {
-        //         'Authorization': 'DEN ' + localStorage.getItem('token')
-        //     }
-        // }).then(response => {
-        //     this.contract = response.data;
-        //     console.log(this.contract);
-        // })
-        // this.doc_id = localStorage.getItem('id');
-        // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-    },
-
-    watch: {
-        type() {
-            console.log(this.type);
-        },
-        totalPrice() {
-            this.calculateTotalPrice();
-        }
-    }
-};
-</script> -->
 <style scoped>
 @media print {
     .sidebar {
-        display: none;
+        display: block;
     }
 
     .content {
@@ -448,19 +236,18 @@ export default {
 
     button,
     i {
-        display: none;
-    }
-
-    #contentPrint {
         display: block;
     }
 
 }
 
+
 #contentPrint {
     display: none;
     color: red;
 }
+
+
 
 .contentPrint {
     display: none;
@@ -622,6 +409,12 @@ textarea {
 .teethImage {
     display: block;
     justify-content: space-around;
+}
+
+.images{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 @media screen and (max-width: 880px) {

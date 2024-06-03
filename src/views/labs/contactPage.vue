@@ -130,7 +130,7 @@ export default {
 
       axios
         .put(
-          `https://api.receptionrobot.net/labs/contract/${id}`,
+          `https://dentist-labs.onrender.com/labs/contract/${id}`,
           { contract: contractData },
           {
             headers: {
@@ -156,7 +156,7 @@ export default {
     console.log(id);
 
     axios
-      .get(`https://api.receptionrobot.net/labs/contract/${id}`, {
+      .get(`https://dentist-labs.onrender.com/labs/contract/${id}`, {
         headers: {
           Authorization: "DEN " + localStorage.getItem("token"),
         },

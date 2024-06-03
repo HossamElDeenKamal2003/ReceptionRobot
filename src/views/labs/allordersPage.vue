@@ -27,7 +27,7 @@
             <button :disabled="isUsernameEmptyOrNull" class="filter" @click="filterReady">Ready</button>
           </li>
           <li tabindex="0">
-            <!-- <button :disabled="isUsernameEmptyOrNull" class="filter" @click="update">Update</button> -->
+            <!-- <button :disabled="isUsernameEmptyOrNull" class="filter" @click="update(order._id)">Update</button> -->
           </li>
         </ul>
         <div id="search-wrapper">
@@ -149,7 +149,6 @@ export default {
       order_id: "",
       check:false,
       numberoforder: 0,
-      //old_number: 0,
       new_number: 0,
       difference: 0,
       firstLength:0,
@@ -163,7 +162,7 @@ export default {
     const role = localStorage.getItem('role');
     if(this.flag === true){
       if (role === 'LAB') {
-      axios.get('https://api.receptionrobot.net/labs/orders', {
+      axios.get('https://dentist-labs.onrender.com/labs/orders', {
         headers: {
           'Authorization': 'DEN ' + localStorage.getItem('token')
         }
@@ -177,7 +176,6 @@ export default {
       });
     } else {
       console.log('Unauthorized access: User role is not LAB');
-      // You can handle unauthorized access here, such as showing a message or redirecting the user
     }
     }
     
@@ -186,7 +184,7 @@ export default {
     const role = localStorage.getItem('role');
     if (role === 'LAB') {
       const isUnderway = this.filteredOrders.find(order => order.UID === ID).status === 'Underway';
-      axios.patch(`https://api.receptionrobot.net/labs/orders/${ID}`, {
+      axios.patch(`https://dentist-labs.onrender.com/labs/orders/${ID}`, {
         status: isUnderway ? 'Ready' : 'Underway'
       }, {
         headers: {
@@ -203,9 +201,9 @@ export default {
       // You can handle unauthorized access here, such as showing a message or redirecting the user
     }
   },
-
+  
   update(id) {
-  axios.patch(`https://api.receptionrobot.net/labs/orders/paid/${id}`, {
+  axios.patch(`https://dentist-labs.onrender.com/labs/orders/paid/${id}`, {
     paid: this.filteredOrders.find(order => order._id === id).paid,
   }, {
     headers: {
@@ -219,13 +217,13 @@ export default {
   });
 },
 markOrder(orderId) {
-  axios.patch(`https://api.receptionrobot.net/labs/orders/${orderId}`, {}, {
+  axios.patch(`https://dentist-labs.onrender.com/labs/orders/${orderId}`, {}, {
     headers: {
       'Authorization': 'DEN ' + localStorage.getItem('token')
     }
   })
   .then(response => {
-    this.end_order = true; // Assuming you want to set a flag indicating that the order has been marked
+    this.end_order = true; 
     console.log('Order marked successfully:', response.data);
     this.fetchData();
   })
@@ -243,7 +241,7 @@ markOrder(orderId) {
   const isSubscribed = localStorage.getItem('delSub') === 'true';
   const role = localStorage.getItem('role');
   if (role === 'LAB') {
-    axios.patch('https://api.receptionrobot.net/labs/public', {
+    axios.patch('https://dentist-labs.onrender.com/labs/public', {
       publicDelivery: !isSubscribed,
     }, {
       headers: {
@@ -263,7 +261,6 @@ markOrder(orderId) {
     });
   } else {
     console.log('Unauthorized access: User role is not LAB');
-    // You can handle unauthorized access here, such as showing a message or redirecting the user
   }
   },
   filterTableName() {
@@ -273,7 +270,6 @@ markOrder(orderId) {
       return;
     }
     const searchTermLowerCase = this.searchTerm.toLowerCase();
-    // Filter orders based on selected field
     if (this.selectedField === "id") {
       this.filteredOrders = this.orders.filter(order =>
         String(order.UID).includes(this.searchTerm)
@@ -294,17 +290,16 @@ markOrder(orderId) {
   },
   filterunderway() {
     this.flag = false;
-    this.filteredOrders = this.orders.filter(order => order.status === "Underway");
+    this.filteredOrders = this.orders.filter(order => order.status === "UNDERWAY(P)"||order.status === "UNDERWAY(F)");
   },
   filterend() {
     this.flag = false;
-    this.filteredOrders = this.orders.filter(order => order.status === "End");
+    this.filteredOrders = this.orders.filter(order => order.status === "END(P)" || order.status === "END(F)");
   },
   filterReady() {
     this.flag = false;
-    this.filteredOrders = this.orders.filter(order => order.status === "LabReady");
+    this.filteredOrders = this.orders.filter(order => order.status === "LabReady(P)" || order.status === "LabReady(F)");
   },
-
 },
 
   mounted() {
@@ -320,13 +315,12 @@ markOrder(orderId) {
     const isSubscribed = localStorage.getItem('delSub') === 'true';
     this.message_sub = isSubscribed ? 'Unsubscribe from Delivery' : 'Subscribe in Delivery';
     this.filterAll();
-    }
+    },
 };
 </script>
 
 <style scoped>
 .green-row {
-   /* border: 10px solid green;  */
     background-color: lightgreen;
 }
 .sidebar {

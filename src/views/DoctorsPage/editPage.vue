@@ -9,6 +9,10 @@
         <div class="content" style="overflow:auto;height:100vh;">
             <form action="">
                 <div class="basic-info">
+                    <div> 
+                        <input type="checkbox" id="prov" v-model="checkboxChecked" @change="handleCheckboxChange">
+                        <label for="prov" style="font-size:larger">Final</label>
+                    </div> 
                     <div>
                         <label for="name">Patient Name : </label>
                         <input type="text" placeholder="Name" id="name" v-model="Patientname">
@@ -56,29 +60,6 @@
                             <option value="BL3">BL3</option>
                             <option value="BL4">BL4</option>
                         </select>
-                        <!-- <select id="colors" v-model="Toothcolor">
-                            <option value="none">none</option>
-                            <option value="A1">A1</option>
-                            <option value="A2">A2</option>
-                            <option value="A3">A3</option>
-                            <option value="A3,5">A3,5</option>
-                            <option value="A4">A4</option>
-                            <option value="B1">B1</option>
-                            <option value="B2">B2</option>
-                            <option value="B3">B3</option>
-                            <option value="B4">B4</option>
-                            <option value="C1">C1</option>
-                            <option value="C2">C2</option>
-                            <option value="C3">C3</option>
-                            <option value="C4">C4</option>
-                            <option value="D2">D2</option>
-                            <option value="D3">D3</option>
-                            <option value="D4">D4</option>
-                            <option value="BL1">BL1</option>
-                            <option value="BL2">BL2</option>
-                            <option value="BL3">BL3</option>
-                            <option value="BL4">BL4</option>
-                        </select> -->
                     </div>
                     <!-- <div>
                         <p>{{type}}</p>
@@ -107,26 +88,59 @@
                 </div>
                 <div class="teethImage" style="width:100%; margin-top:2%;">
                     <img src="@/assets/teeth.jpg" alt="Teeth Image" width="100%" height="50%">
-                    <textarea name="" id="" style="overflow:auto; width:100%; height: 25%" v-model="note"></textarea>
+                    <label for="req">Requirments</label>
+                    <textarea name="" id="req" style="overflow:auto; width:100%; height: 25%" v-model="note"></textarea>
                     <div class="container">
                         <div class="display">
                             <p>{{ message }}</p>
-                            <audio controls  :src="records" @change="handleAudioFileChange"></audio>
-                            <!-- <audio controls src="E:\masallab editversion\massalab\voice_records\voice_gftfJ7d.ogg"></audio> -->
-                            <!-- <input type="file" class="hiddenInput" v-if="inputURL"/> -->
                         </div>
-                        <!-- <div class="controllers">
-                            <button v-if="currentState === 'Initial'" @click="startRecording"
-                                class="btn btn-primary">Start
-                                Recording</button>
-                            <button v-if="currentState === 'Record'" @click="stopRecording">Stop Recording</button>
-                            <button v-if="currentState === 'Download'" @click="recordAgain">Record Again</button>
-                        </div> -->
                     </div>
                 </div>
-
+                <div class="teethImage" style="width:100%; margin-top:2%;">
+                    <!-- <div v-for="(image, index) in fetchedImageURLs" :key="index" class="image-container">
+                        <img :src="image" alt="Teeth Image" width="100%" height="50%">
+                    </div> -->
+                    <!-- <label for="req">Requirments</label>
+                    <textarea name="" id="req" style="overflow:auto; width:100%; height: 25%" v-model="note"></textarea> -->
+                    <div class="container">
+                        <div class="display">
+                            <p>{{ message }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider" style="width:100%; display:flex; justify-contnet:center;">
+                    <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false"
+                        data-bs-interval="false" style="width:80%">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img :src="image" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img :src="image1" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img :src="image2" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <video :src="video" class="d-block w-100" controls></video>
+                            </div>
+                            <div style="diplay:flex; justify-content:space-between">
+                                <button class="carousel-control-next" type="button"
+                                    data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                                <button class="carousel-control-prev" type="button"
+                                    data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="print&sub">
-                    <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div>
+                    <!-- <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div> -->
                     <div class="sub">
                         <button @click="preventSub" class="btn btn" title="Save" type="Submit">Submit</button>
                     </div>
@@ -145,13 +159,13 @@ export default {
             return this.id;
         },
         formattedType() {
-        // Replace underscores with dashes in the type value
-        return this.type.replace('_', '-');
-    }
+            return this.type.replace('_', '-');
+        }
     },
     name: "newOrder",
     data() {
         return {
+            checkboxChecked:false,
             isActiveSidebar: false,
             users: [],
             Patientname: "",
@@ -170,35 +184,16 @@ export default {
             audioURL: '',
             inputURL: "",
             chunks_to_send: [],
-            records:'',
-            error:'e',
-            color_new_value:"",
-            alt_record:"",
-            // toothColors: ["A1", "A2", "A3", "A3.5", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D2", "D3", "D4", "BL1", "BL2", "BL3", "BL4"],
+            records: '',
+            error: 'e',
+            color_new_value: "",
+            alt_record: "",
+            image: null,
+            image1: null,
+            image2: null,
+            video: null,
+            prov:true,
         };
-    },
-
-    mounted() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    this.mediaRecorder = new MediaRecorder(stream)
-                    this.mediaRecorder.ondataavailable = e => this.chunks.push(e.data)
-                    this.mediaRecorder.onstop = () => {
-                        const blob = new Blob(this.chunks, { type: 'audio/ogg; codecs=opus' })
-                        this.chunks_to_send = this.chunks
-                        this.chunks = []
-                        this.audioURL = window.URL.createObjectURL(blob)
-                        // this.audioURL = blob
-                    }
-                })
-                .catch(error => {
-                    console.log('Following error has occurred:', error)
-                })
-        } else {
-            this.currentState = ''
-            this.message = 'Your browser does not support mediaDevices'
-        }
     },
     watch: {
         Toothcolor(newValue, oldValue) {
@@ -207,22 +202,25 @@ export default {
             this.Toothcolor = newValue;
         },
 
-},
+    },
 
     methods: {
+        handleCheckboxChange() {
+            if (this.checkboxChecked) {
+                this.prov = false;
+            }
+        },
         checkName() {
             const name = this.Patientname;
             return name !== "";
         },
         handleAudioFileChange(event) {
-            // Store the selected audio file in the component's data
             this.audioFile = event.target.files[0];
             this.inputURL = this.audioFile;
             console.log(this.inputURL);
         },
         preventSub(e) {
             e.preventDefault();
-            // Create FormData object to send data to the server
             const formData = new FormData();
             formData.append('patientName', this.Patientname);
             formData.append('type', this.type);
@@ -231,162 +229,123 @@ export default {
             formData.append('color', this.Toothcolor);
             formData.append('teethNo', this.numberofteeth);
             formData.append('description', this.note);
-            // Append the audio file to the FormData object
-            const blob = new Blob(this.chunks_to_send, { type: 'audio/ogg' })
-                this.chunks_to_send = []
-                formData.append('voiceNote', blob, 'voice.ogg');
-            console.log("form: ", formData)
-            // const response = axios.get('http://127.0.0.1:8000/api/doctor/all_orders/');
+            formData.append('prova',this.prov);
             const order_id = this.id
-            // Send FormData object to the server using Axios
-            axios.put(`https://api.receptionrobot.net/doctors/orders/update/${order_id}/`, formData, {
+            axios.put(`https://dentist-labs.onrender.com/doctors/orders/update/${order_id}/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-            }).then(()=> {
-                //if (response.status === 200) {
-                    console.log("order sent successfully");
-                    axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
-                    const order_id = this.id;
-                    axios.get(`https://api.receptionrobot.net/doctors/orders/${order_id}`).then(response => {
-                        //console.log(response.data);
-                        console.log(response.data.gender);
-                        console.log(this.id);
-                        this.Patientname = response.data.patientName
-                        this.Age = response.data.age;
-                        this.numberofteeth = response.data.teethNo;
-                        this.Toothcolor = response.data.color;
-                        this.sex = response.data.description;
-                        this.note = response.data.note;
-                        this.type = response.data.type;
-                        if(this.sex === ''){
-                            console.log('sex is empty');
-                        }else{
-                            console.log(this.sex);
-                        }
-                        //this.audioURL = response.data.records[0].voice_record;
-                        // this.audioURL = 'E:\\masallab editversion\\massalab\\voice_records'+response.data.records[0].voice_record;
-                        // console.log(this.audioURL);
-                        //this.records.push(response.data.records);
-                        this.records = response.data.voiceNote;
-                        console.log(this.records);
-                        if (this.audioURL) {
-                            const blob = new Blob(this.chunks_to_send, { type: 'audio/ogg' })
-                            this.chunks_to_send = []
-                            formData.append('voiceNote', blob, 'voice.ogg');
-                        }
-                    })
-                //}
+            }).then(() => {
+                console.log("order sent successfully");
+                alert("Updated Successfully");
+                axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
+                const order_id = this.id;
+                axios.get(`https://dentist-labs.onrender.com/doctors/orders/${order_id}`).then(response => {
+                    console.log(response.data.gender);
+                    console.log(this.id);
+                    this.Patientname = response.data.patientName
+                    this.Age = response.data.age;
+                    this.numberofteeth = response.data.teethNo;
+                    this.Toothcolor = response.data.color;
+                    this.sex = response.data.sex;
+                    this.note = response.data.note;
+                    this.type = response.data.type;
+                    if (this.sex === '') {
+                        console.log('sex is empty');
+                    } else {
+                        console.log(this.sex);
+                    }
+                })
             }).catch(error => {
                 console.log(error);
             });
-            
         },
-        printer(){
-            
-            // document.getElementById('name').style.display = 'block';
-            // document.getElementById('Age').style.display = 'block';
-            // document.getElementById('numberTeeth').style.display = 'block';
-            // document.getElementById('').style.display = 'block';
-            //sex
-            //colors
-            // Print the content
+        printer() {
             window.print();
-        },
-        startRecording() {
-            this.currentState = 'Record';
-            // Check if mediaRecorder is initialized
-            if (this.mediaRecorder) {
-                // Start recording
-                this.mediaRecorder.start();
-                this.message = 'Recording...';
-            } else {
-                console.error('MediaRecorder is not initialized.');
-            }
-            
-            // Listen for data available event
-            this.mediaRecorder.ondataavailable = e => {
-                // Append new chunks to the existing array
-                this.chunks.push(e.data);
-            };
-        },
-        stopRecording() {
-            this.currentState = 'Download';
-            this.mediaRecorder.stop();
-            this.message = 'Voice Message';
-            //this.preventSub(this.error);
-        },
-        recordAgain() {
-            this.currentState = 'Record'
-            this.audioURL = ''
-            this.startRecording()
-        },
-        toggleRecording() {
-            if (!this.recording) {
-                // Start recording
-                this.recording = true;
-                this.chunks = [];
-                this.mediaRecorder.start();
-            } else {
-                //stop recording
-                this.recording = false;
-                this.mediaRecorder.stop();
-            }
         },
     },
     created() {
         axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
         const order_id = this.id;
-        axios.get(`https://api.receptionrobot.net/doctors/orders/${order_id}`,{
+        axios.get(`https://dentist-labs.onrender.com/doctors/orders/${order_id}`, {
             headers: {
                 'Authorization': 'DEN ' + localStorage.getItem('token')
             }
         }).then(response => {
             console.log(response.data);
-            //console.log(response.data.gender);
-            console.log(this.id);
-            this.Patientname = response.data.patientName
+            this.Patientname = response.data.patientName;
             this.Age = response.data.age;
-            this.Toothcolor = response.data.color;
             this.numberofteeth = response.data.teethNo;
-            if(response.data.gender === 'M'){
-                this.sex = 'Male';
-                console.log(this.sex);
-            }else{
-                this.sex = 'Female';
-            }
-            
+            this.Toothcolor = response.data.color;
             this.sex = response.data.sex;
             this.note = response.data.description;
             this.type = response.data.type;
-            console.log(this.type);
-            //this.audioURL = response.data.records[0].voice_record;
-            // this.audioURL = 'E:\\masallab editversion\\massalab\\voice_records'+response.data.records[0].voice_record;
-            // console.log(this.audioURL);
-            //this.records.push(response.data.records);
-                this.records = response.data.voiceNote;
-            console.log(this.records);
-        })
+            this.image = response.data.image;
+            this.image1 = response.data.image1;
+            this.image2 = response.data.image2;
+            this.video = response.data.video;
+            console.log(this.image)
+        }).catch(error => {
+            console.log(error);
+        });
     },
 };
 </script>
 <style scoped>
-
-@media print{
-    .sidebar{
+@media print {
+    .sidebar {
         display: none;
     }
-    .content{
+
+    .content {
         position: absolute;
         width: 90%;
         left: -20%;
         top: 0;
     }
-    button,i{
+
+    button,
+    i {
         display: none;
     }
 }
 
+label {
+    color: #33a1f1;
+}
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+    background-image: none; /* Remove default Bootstrap icon */
+}
+
+.carousel-control-next-icon::after,
+.carousel-control-prev-icon::after {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: solid black; /* Set the color of the arrows */
+    border-width: 0 4px 4px 0;
+    padding: 5px;
+}
+
+.carousel-control-next-icon::after {
+    transform: rotate(-45deg);
+}
+
+.carousel-control-prev-icon::after {
+    transform: rotate(135deg);
+}
+
+.slider{
+    height: fit-content;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+    width: inherit;
+}
 .sidebar {
     margin: 0;
     padding: 0;
@@ -413,6 +372,7 @@ export default {
 .sidebar .activate {
     background-color: blue;
 }
+
 
 
 label {
@@ -512,6 +472,12 @@ form {
     color: white;
 }
 
+.images {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
 input,
 select {
     border-top: none;
@@ -570,6 +536,13 @@ textarea {
 
     .teethImage img {
         height: 60%;
+    }
+    .images{
+        flex-direction: column;
+    }
+    .images img{
+        width: 100%;
+        height: 100%;
     }
 }
 

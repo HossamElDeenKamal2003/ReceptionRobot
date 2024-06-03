@@ -1,8 +1,6 @@
 <template>
     <section class="all-orders">
         <div class="sidebar" :class="{ 'active': isActiveSidebar }">
-            <!-- <router-link to="/newOrder" style="text-decoration: underline;">New Order</router-link> -->
-            <router-link to="/allorders">All Orders</router-link>
             <router-link to="/delievry">Delievery</router-link>
             <router-link to="/finance">Finance</router-link>
         </div>
@@ -56,33 +54,7 @@
                             <option value="BL3">BL3</option>
                             <option value="BL4">BL4</option>
                         </select>
-                        <!-- <select id="colors" v-model="Toothcolor">
-                            <option value="none">none</option>
-                            <option value="A1">A1</option>
-                            <option value="A2">A2</option>
-                            <option value="A3">A3</option>
-                            <option value="A3,5">A3,5</option>
-                            <option value="A4">A4</option>
-                            <option value="B1">B1</option>
-                            <option value="B2">B2</option>
-                            <option value="B3">B3</option>
-                            <option value="B4">B4</option>
-                            <option value="C1">C1</option>
-                            <option value="C2">C2</option>
-                            <option value="C3">C3</option>
-                            <option value="C4">C4</option>
-                            <option value="D2">D2</option>
-                            <option value="D3">D3</option>
-                            <option value="D4">D4</option>
-                            <option value="BL1">BL1</option>
-                            <option value="BL2">BL2</option>
-                            <option value="BL3">BL3</option>
-                            <option value="BL4">BL4</option>
-                        </select> -->
                     </div>
-                    <!-- <div>
-                        <p>{{type}}</p>
-                    </div> -->
                     <div>
                         <label class="form-label">Type</label>
                         <select class="form-select" v-model="type">
@@ -106,29 +78,46 @@
                     </div>
                 </div>
                 <div class="teethImage" style="width:100%; margin-top:2%;">
-                    <img src="@/assets/teeth.jpg" alt="Teeth Image" width="100%" height="50%">
+                    <img src="@/assets/illustrateTeethimage.png" alt="Teeth Image" width="100%" height="50%">
+                    <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div>
+                    <label for="req">Requirments</label>
                     <textarea name="" id="" style="overflow:auto; width:100%; height: 25%" v-model="note"></textarea>
+                    <a :href="file" :style="{ display: file === null ? 'none' : 'inline' }">Screen File</a>
                     <div class="container">
                         <div class="display">
                             <p>{{ message }}</p>
-                            <audio controls :src="records" @change="handleAudioFileChange"></audio>
-                            <!-- <audio controls src="E:\masallab editversion\massalab\voice_records\voice_gftfJ7d.ogg"></audio> -->
-                            <!-- <input type="file" class="hiddenInput" v-if="inputURL"/> -->
-                        </div>
-                        <div class="controllers">
-                            <button v-if="currentState === 'Initial'" @click="startRecording"
-                                class="btn btn-primary">Start
-                                Recording</button>
-                            <button v-if="currentState === 'Record'" @click="stopRecording">Stop Recording</button>
-                            <button v-if="currentState === 'Download'" @click="recordAgain">Record Again</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="print&sub">
-                    <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div>
-                    <div class="sub">
-                        <button @click="preventSub" class="btn btn" title="Save" type="Submit">Submit</button>
+                <div class="slider" style="height:50vh; width:100%; display:flex; justify-contnet:center;">
+                    <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false"
+                        data-bs-interval="false" style="width:80%">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img v-if="image" :src="image" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img v-if="image1" :src="image1" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img v-if="image2" :src="image2" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item" v-if="video">
+                                <video :src="video" class="d-block w-100" controls></video>
+                            </div>
+                            <div style="diplay:flex; justify-content:space-between">
+                                <button class="carousel-control-next" type="button"
+                                    data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                                <button class="carousel-control-prev" type="button"
+                                    data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -174,31 +163,13 @@ export default {
             error: 'e',
             color_new_value: "",
             alt_record: "",
+            image: null,
+            image1: null,
+            image2: null,
+            video: null,
+            file: null,
             // toothColors: ["A1", "A2", "A3", "A3.5", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D2", "D3", "D4", "BL1", "BL2", "BL3", "BL4"],
         };
-    },
-
-    mounted() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    this.mediaRecorder = new MediaRecorder(stream)
-                    this.mediaRecorder.ondataavailable = e => this.chunks.push(e.data)
-                    this.mediaRecorder.onstop = () => {
-                        const blob = new Blob(this.chunks, { type: 'audio/ogg; codecs=opus' })
-                        this.chunks_to_send = this.chunks
-                        this.chunks = []
-                        this.audioURL = window.URL.createObjectURL(blob)
-                        // this.audioURL = blob
-                    }
-                })
-                .catch(error => {
-                    console.log('Following error has occurred:', error)
-                })
-        } else {
-            this.currentState = ''
-            this.message = 'Your browser does not support mediaDevices'
-        }
     },
     watch: {
         Toothcolor(newValue, oldValue) {
@@ -206,7 +177,6 @@ export default {
             console.log("Old value:", oldValue);
             this.Toothcolor = newValue;
         },
-
     },
 
     methods: {
@@ -230,74 +200,69 @@ export default {
             // Print the content
             window.print();
         },
-        startRecording() {
-            this.currentState = 'Record';
-            // Check if mediaRecorder is initialized
-            if (this.mediaRecorder) {
-                // Start recording
-                this.mediaRecorder.start();
-                this.message = 'Recording...';
-            } else {
-                console.error('MediaRecorder is not initialized.');
-            }
-
-            // Listen for data available event
-            this.mediaRecorder.ondataavailable = e => {
-                // Append new chunks to the existing array
-                this.chunks.push(e.data);
-            };
-        },
-        stopRecording() {
-            this.currentState = 'Download';
-            this.mediaRecorder.stop();
-            this.message = 'Voice Message';
-            //this.preventSub(this.error);
-        },
-        recordAgain() {
-            this.currentState = 'Record'
-            this.audioURL = ''
-            this.startRecording()
-        },
-        toggleRecording() {
-            if (!this.recording) {
-                // Start recording
-                this.recording = true;
-                this.chunks = [];
-                this.mediaRecorder.start();
-            } else {
-                //stop recording
-                this.recording = false;
-                this.mediaRecorder.stop();
-            }
-        },
     },
     created() {
-    const orderId = this.$route.params.id; 
-    axios.get(`https://api.receptionrobot.net/labs/orders/${orderId}`, {
-        headers: {
-            'Authorization': 'DEN ' + localStorage.getItem('token')
-        }
-    })
-    .then(response => {
-        console.log(response.data);
-        this.Patientname = response.data.patientName;
-        this.Age = response.data.age;
-        this.Toothcolor = response.data.color;
-        this.numberofteeth = response.data.teethNo;
-        this.sex = response.data.sex === 'M' ? 'Male' : 'Female';
-        this.note = response.data.description;
-        this.type = response.data.type;
-        this.records = response.data.voiceNote;
-        console.log(this.records);
-    })
-    .catch(error => {
-        console.error('Error fetching order:', error);
-    });
-},
+        const orderId = this.$route.params.id;
+        axios.get(`https://dentist-labs.onrender.com/labs/orders/${orderId}`, {
+            headers: {
+                'Authorization': 'DEN ' + localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+                this.Patientname = response.data.patientName;
+                this.Age = response.data.age;
+                this.Toothcolor = response.data.color;
+                this.numberofteeth = response.data.teethNo;
+                this.sex = response.data.sex;
+                this.note = response.data.description;
+                this.type = response.data.type;
+                this.image = response.data.image;
+                this.image1 = response.data.image1;
+                this.image2 = response.data.image2;
+                this.video = response.data.video;
+                this.file = response.data.file;
+                console.log(this.file)
+            })
+            .catch(error => {
+                console.error('Error fetching order:', error);
+            });
+    },
 
 };
 </script>
 <style scoped>
+@media print {
+    .sidebar {
+        display: none;
+    }
+
+    .slider{
+        display: none;
+    }
+
+    .content {
+        position: absolute;
+        width: 90%;
+        left: -20%;
+        top: 0;
+    }
+
+    button,
+    i {
+        display: none;
+    }
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+    width: inherit;
+}
+
+label {
+    color: #33a1f1;
+}
+
 .sidebar {
     margin: 0;
     padding: 0;
@@ -311,6 +276,36 @@ export default {
 
 .hiddenInput {
     display: none;
+}
+
+/*.carousel-inner video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}*/
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+    background-image: none; /* Remove default Bootstrap icon */
+}
+
+.carousel-control-next-icon::after,
+.carousel-control-prev-icon::after {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: solid black; /* Set the color of the arrows */
+    border-width: 0 4px 4px 0;
+    padding: 5px;
+}
+
+.carousel-control-next-icon::after {
+    transform: rotate(-45deg);
+}
+
+.carousel-control-prev-icon::after {
+    transform: rotate(135deg);
 }
 
 .sidebar a {
@@ -337,6 +332,12 @@ input {
     border-right: none;
     border-left: none;
     border-bottom: 2px black solid;
+}
+
+.images {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .basic-info {
@@ -395,20 +396,23 @@ div.content {
 
 .printer {
     position: absolute;
-    right: -15px;
-    bottom: 50px;
+    right: 0;
     background-color: black;
     border-radius: 10px 0 0 10px;
     width: 50px;
+}
+
+.printer i{
+    color: white;
 }
 
 form {
     position: relative;
 }
 
-.printer i {
+/*.printer i {
     color: white;
-}
+}*/
 
 .sub {
     position: absolute;

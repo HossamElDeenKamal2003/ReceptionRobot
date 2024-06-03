@@ -57,7 +57,7 @@ export default {
             });
         },
         addDoctor(id) {
-            axios.post(`https://api.receptionrobot.net/labs/addDoc/${id}`, {}, {
+            axios.post(`https://dentist-labs.onrender.com/labs/addDoc/${id}`, {}, {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -70,7 +70,7 @@ export default {
             });
         },
         fetchDoctors() {
-            axios.get('https://api.receptionrobot.net/labs/doctors',{
+            axios.get('https://dentist-labs.onrender.com/labs/doctors',{
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }

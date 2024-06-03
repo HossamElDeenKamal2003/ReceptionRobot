@@ -4,7 +4,7 @@
     </div>
     <div class="About container" v-bind:style="{opacity:opacityimg}">
         <img src="@/assets/secondSection.jpg" alt="" width="25%" height="90%"/>
-        <p>Masallab is a system aimed at facilitating communication between dentists and laboratories and transferring tangible parts between them easily.</p>
+        <p>Reception Robot is a system aimed at facilitating communication between dentists and laboratories and transferring tangible parts between them easily.</p>
     </div>
 </template>
 
