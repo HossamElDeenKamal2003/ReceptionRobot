@@ -13,6 +13,10 @@
                         <input type="checkbox" id="prov" v-model="checkboxChecked" @change="handleCheckboxChange">
                         <label for="prov" style="font-size:larger">Final</label>
                     </div> 
+                    <div> 
+                        <input type="checkbox" id="docReady" v-model="docReady">
+                        <label for="prov" style="font-size:larger">Call Delivery</label>
+                    </div> 
                     <div>
                         <label for="name">Patient Name : </label>
                         <input type="text" placeholder="Name" id="name" v-model="Patientname">
@@ -61,16 +65,14 @@
                             <option value="BL4">BL4</option>
                         </select>
                     </div>
-                    <!-- <div>
-                        <p>{{type}}</p>
-                    </div> -->
                     <div>
                         <label class="form-label">Type</label>
                         <select class="form-select" v-model="type">
                             <option :value="type">{{ type }}</option>
-                            <option value="zircon_wave">Zircon Wave</option>
+                            <!-- <option value="zircon_wave">Zircon Wave</option>
                             <option value="zircon_dental_direct">Zircon Dental Direct</option>
-                            <option value="zircon_emax_prime_ivoclar">Zircon e-max prime ivoclar</option>
+                            <option value="zircon_emax_prime_ivoclar">Zircon e-max prime ivoclar</option> -->
+                            <option value="zircon">Zircon </option>
                             <option value="impress_crown">Impress Crown</option>
                             <option value="impress_intaly">Impress Intaly</option>
                             <option value="impress_onlay">Impress Onlay</option>
@@ -87,7 +89,7 @@
                     </div>
                 </div>
                 <div class="teethImage" style="width:100%; margin-top:2%;">
-                    <img src="@/assets/teeth.jpg" alt="Teeth Image" width="100%" height="50%">
+                    <img src="@/assets/illustrateTeethimage.png" alt="Teeth Image" width="100%" height="50%">
                     <label for="req">Requirments</label>
                     <textarea name="" id="req" style="overflow:auto; width:100%; height: 25%" v-model="note"></textarea>
                     <div class="container">
@@ -167,6 +169,7 @@ export default {
         return {
             checkboxChecked:false,
             isActiveSidebar: false,
+            docReady: false,
             users: [],
             Patientname: "",
             errorName: "",
@@ -230,34 +233,32 @@ export default {
             formData.append('teethNo', this.numberofteeth);
             formData.append('description', this.note);
             formData.append('prova',this.prov);
+            formData.append('docReady',this.docReady);
             const order_id = this.id
-            axios.put(`https://dentist-labs.onrender.com/doctors/orders/update/${order_id}/`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(() => {
-                console.log("order sent successfully");
+            axios.put(`https://dentist-backend-ts43.onrender.com/doctors/orders/update/${order_id}/`, formData,{
+            }).then(response => {
+                console.log(response.data)
                 alert("Updated Successfully");
-                axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
-                const order_id = this.id;
-                axios.get(`https://dentist-labs.onrender.com/doctors/orders/${order_id}`).then(response => {
-                    console.log(response.data.gender);
-                    console.log(this.id);
-                    this.Patientname = response.data.patientName
-                    this.Age = response.data.age;
-                    this.numberofteeth = response.data.teethNo;
-                    this.Toothcolor = response.data.color;
-                    this.sex = response.data.sex;
-                    this.note = response.data.note;
-                    this.type = response.data.type;
-                    if (this.sex === '') {
-                        console.log('sex is empty');
-                    } else {
-                        console.log(this.sex);
-                    }
-                })
-            }).catch(error => {
-                console.log(error);
+                this.$router.go(0);
+            //     const order_id = this.id;
+            //     axios.get(`https://dentist-backend-ts43.onrender.com/doctors/orders/${order_id}`).then(response => {
+            //         console.log(response.data.gender);
+            //         console.log(this.id);
+            //         this.Patientname = response.data.patientName
+            //         this.Age = response.data.age;
+            //         this.numberofteeth = response.data.teethNo;
+            //         this.Toothcolor = response.data.color;
+            //         this.sex = response.data.sex;
+            //         this.note = response.data.note;
+            //         this.type = response.data.type;
+            //         if (this.sex === '') {
+            //             console.log('sex is empty');
+            //         } else {
+            //             console.log(this.sex);
+            //         }
+            //     })
+            // }).catch(error => {
+            //     console.log(error);
             });
         },
         printer() {
@@ -265,9 +266,9 @@ export default {
         },
     },
     created() {
-        axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
+        // axios.defaults.headers.common['Authorization'] = 'DEN ' + localStorage.getItem('token');
         const order_id = this.id;
-        axios.get(`https://dentist-labs.onrender.com/doctors/orders/${order_id}`, {
+        axios.get(`https://dentist-backend-ts43.onrender.com/doctors/orders/${order_id}`, {
             headers: {
                 'Authorization': 'DEN ' + localStorage.getItem('token')
             }
@@ -288,6 +289,12 @@ export default {
         }).catch(error => {
             console.log(error);
         });
+        // axios.get(`/${order_id}`).then((response)=>{
+        //         this.image = response.data.image;
+        //         this.image1 = response.image1;
+        //         this.image2 = response.data.image2;
+        //         this.video = response.data.video
+        //     })
     },
 };
 </script>

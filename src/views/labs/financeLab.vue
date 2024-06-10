@@ -54,8 +54,7 @@ export default {
     methods: {
         fetchFinanceData() {
         const token = localStorage.getItem('token');
-        console.log('Token:', token); // Log the token to ensure it's correct
-        axios.get('https://dentist-labs.onrender.com/labs/financial', {
+        axios.get('https://dentist-backend-ts43.onrender.com/labs/financial', {
             params: {
                 startDate: this.startDate,
                 endDate: this.endDate

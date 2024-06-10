@@ -58,7 +58,7 @@
                         <td>
                             <button v-if="order.status === 'LabReady(P)'||order.status === 'LabReady(F)' || order.status ==='OTW_DOC(P)'||order.status === 'OTW_DOC(F)'|| order.status === 'End(P)'||order.status === 'End(F)'"
                                 @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{ order.doc_id.username }}</button>
-                            <button v-else-if="order.status === 'DocReady(P)'||order.status === 'DocReady(F)'|| order.status === 'OTW_LAB(P)'||order.status==='OTW_Ready(F)' || order.status === 'UNDERWAY(P)'||order.status==='UNDERWAY(F)'"
+                            <button v-else-if="order.status === 'DocReady(P)'||order.status === 'DocReady(F)'|| order.status === 'OTW_LAB(P)'|| order.status === 'OTW_LAB(F)'||order.status==='OTW_Ready(F)' || order.status === 'UNDERWAY(P)'||order.status==='UNDERWAY(F)'"
                                 @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{ order.lab_id.username }}</button>
                         </td>
                         <td>
@@ -137,7 +137,7 @@ export default {
             }
         },
         fetchData() {
-            axios.get('https://dentist-labs.onrender.com/deliverers/orders', {
+            axios.get('https://dentist-backend-ts43.onrender.com/deliverers/orders', {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -154,13 +154,13 @@ export default {
             this.addressDel = ("Name : " + name + " => " + "Address : " + address + ' => ' + "Building Number : " + buildingno + ' => ' + "Floor Number : " + floorno);
         },
         filterend() {
-            axios.get('https://dentist-labs.onrender.com/deliverers/orders/myOrders', {
+            axios.get('https://dentist-backend-ts43.onrender.com/deliverers/orders/myOrders', {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
             })
                 .then((response) => {
-                    this.orders = response.data.filter(order => order.status !== 'DocReady');
+                    this.orders = response.data.filter(order => order.status !== 'DocReady(P)' || order.status !== 'DocReady(F)');
                     this.filteredOrders = this.orders;
                     this.filteredOrders.reverse();
                 })
@@ -173,7 +173,7 @@ export default {
         },
         takeOrder(order) {
             if (order.status === 'DocReady(P)' || order.status === 'LabReady(P)' || order.status === "DocReady(F)" || order.status === "LabReady(F)") {
-                axios.patch(`https://dentist-labs.onrender.com/deliverers/orders/otw/${order._id}`, {}, {
+                axios.patch(`https://dentist-backend-ts43.onrender.com/deliverers/orders/otw/${order._id}`, {}, {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
@@ -184,7 +184,7 @@ export default {
                     console.error('Error taking order:', error);
                 });
             } else if (order.status === 'OTW_LAB(P)' || order.status === 'OTW_LAB(F)') {
-                axios.patch(`https://dentist-labs.onrender.com/deliverers/orders/lab/delivered/${order._id}`, {}, {
+                axios.patch(`https://dentist-backend-ts43.onrender.com/deliverers/orders/lab/delivered/${order._id}`, {}, {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
@@ -195,7 +195,7 @@ export default {
                     console.error('Error delivering order:', error);
                 });
             }else if(order.status === 'OTW_DOC(P)' || order.status === 'OTW_DOC(F)'){
-                axios.patch(`https://dentist-labs.onrender.com/deliverers/orders/doc/delivered/${order._id}`,{},{
+                axios.patch(`https://dentist-backend-ts43.onrender.com/deliverers/orders/doc/delivered/${order._id}`,{},{
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }

@@ -1,129 +1,137 @@
-<template>
-    <section class="all-orders">
-        <div class="sidebar" :class="{ 'active': isActiveSidebar }">
-            <router-link to="/delievry">Delievery</router-link>
-            <router-link to="/finance">Finance</router-link>
-        </div>
-        <div class="content" style="overflow:auto;height:100vh;">
-            <form action="">
-                <div class="basic-info">
-                    <div>
-                        <label for="name">Patient Name : </label>
-                        <input type="text" placeholder="Name" id="name" v-model="Patientname">
-                        <p style="color: red;" v-text="this.errorName"></p>
-                    </div>
-                    <div>
-                        <label for="Age">Age : </label>
-                        <input type="text" placeholder="Age" id="Age" v-model="Age">
-                    </div>
-                    <div>
-                        <label for="numberTeeth">Number Of Teeth : </label>
-                        <input type="text" placeholder="numberTeeth" id="numberTeeth" v-model="numberofteeth">
-                    </div>
-                </div>
-                <div class="second_info">
-                    <div>
-                        <label for="sex">Sex</label>
-                        <select class="sex" id="sex" v-model="sex">
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="colors">Color</label>
-                        <select id="colors" v-model="Toothcolor">
-                            <option value="none">none</option>
-                            <option value="A1">A1</option>
-                            <option value="A2">A2</option>
-                            <option value="A3">A3</option>
-                            <option value="A3,5">A3,5</option>
-                            <option value="A4">A4</option>
-                            <option value="B1">B1</option>
-                            <option value="B2">B2</option>
-                            <option value="B3">B3</option>
-                            <option value="B4">B4</option>
-                            <option value="C1">C1</option>
-                            <option value="C2">C2</option>
-                            <option value="C3">C3</option>
-                            <option value="C4">C4</option>
-                            <option value="D2">D2</option>
-                            <option value="D3">D3</option>
-                            <option value="D4">D4</option>
-                            <option value="BL1">BL1</option>
-                            <option value="BL2">BL2</option>
-                            <option value="BL3">BL3</option>
-                            <option value="BL4">BL4</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label">Type</label>
-                        <select class="form-select" v-model="type">
-                            <option :value="type">{{ type }}</option>
-                            <option value="zircon_wave">Zircon Wave</option>
-                            <option value="zircon_dental_direct">Zircon Dental Direct</option>
-                            <option value="zircon_emax_prime_ivoclar">Zircon e-max prime ivoclar</option>
-                            <option value="impress_crown">Impress Crown</option>
-                            <option value="impress_intaly">Impress Intaly</option>
-                            <option value="impress_onlay">Impress Onlay</option>
-                            <option value="impress_overlay">Impress Overlay</option>
-                            <option value="pfm">PFM</option>
-                            <option value="implant_zircon">Implant Zircon</option>
-                            <option value="implant_pfm">Implant PFM</option>
-                            <option value="night_gard">Night Gard</option>
-                            <option value="night_white">Night White</option>
-                            <option value="retainer">Retainer</option>
-                            <option value="study_model">Study Model</option>
-                            <option value="snap_on_smile">Snap On Smile</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="teethImage" style="width:100%; margin-top:2%;">
-                    <img src="@/assets/illustrateTeethimage.png" alt="Teeth Image" width="100%" height="50%">
-                    <div class="printer" @click="printer" title="Print"><i class="bi bi-printer"></i></div>
-                    <label for="req">Requirments</label>
-                    <textarea name="" id="" style="overflow:auto; width:100%; height: 25%" v-model="note"></textarea>
-                    <a :href="file" :style="{ display: file === null ? 'none' : 'inline' }">Screen File</a>
-                    <div class="container">
-                        <div class="display">
-                            <p>{{ message }}</p>
+    <template>
+        <section class="all-orders">
+            <div class="sidebar" :class="{ 'active': isActiveSidebar }">
+                <router-link to="/delievry">Delievery</router-link>
+                <router-link to="/finance">Finance</router-link>
+            </div>
+            <div class="content" style="overflow:auto;height:100vh;">
+
+                <form action="">
+                    <div class="basic-info">
+                        <div>
+                            <label for="name">Patient Name : </label>
+                            <input type="text" placeholder="Name" id="name" v-model="Patientname">
+                            <p style="color: red;" v-text="this.errorName"></p>
                         </div>
-                    </div>
-                </div>
-                <div class="slider" style="height:50vh; width:100%; display:flex; justify-contnet:center;">
-                    <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false"
-                        data-bs-interval="false" style="width:80%">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img v-if="image" :src="image" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img v-if="image1" :src="image1" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img v-if="image2" :src="image2" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item" v-if="video">
-                                <video :src="video" class="d-block w-100" controls></video>
-                            </div>
-                            <div style="diplay:flex; justify-content:space-between">
-                                <button class="carousel-control-next" type="button"
-                                    data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-                                <button class="carousel-control-prev" type="button"
-                                    data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
+                        <div>
+                            <label for="Age">Age : </label>
+                            <input type="text" placeholder="Age" id="Age" v-model="Age">
+                        </div>
+                        <div>
+                            <label for="numberTeeth">Number Of Teeth : </label>
+                            <input type="text" placeholder="numberTeeth" id="numberTeeth" v-model="numberofteeth">
+                            <div class="printer" @click="printer" title="Print" id="print"><i class="bi bi-printer"></i>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
-        </div>
-    </section>
-</template>
+                    <div class="second_info">
+                        <div>
+                            <label for="sex">Sex</label>
+                            <select class="sex" id="sex" v-model="sex">
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="colors">Color</label>
+                            <select id="colors" v-model="Toothcolor">
+                                <option value="none">none</option>
+                                <option value="A1">A1</option>
+                                <option value="A2">A2</option>
+                                <option value="A3">A3</option>
+                                <option value="A3,5">A3,5</option>
+                                <option value="A4">A4</option>
+                                <option value="B1">B1</option>
+                                <option value="B2">B2</option>
+                                <option value="B3">B3</option>
+                                <option value="B4">B4</option>
+                                <option value="C1">C1</option>
+                                <option value="C2">C2</option>
+                                <option value="C3">C3</option>
+                                <option value="C4">C4</option>
+                                <option value="D2">D2</option>
+                                <option value="D3">D3</option>
+                                <option value="D4">D4</option>
+                                <option value="BL1">BL1</option>
+                                <option value="BL2">BL2</option>
+                                <option value="BL3">BL3</option>
+                                <option value="BL4">BL4</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Type</label>
+                            <select class="form-select" v-model="type">
+                                <option :value="type">{{ type }}</option>
+                                <option value="zircon_wave">Zircon Wave</option>
+                                <option value="zircon_dental_direct">Zircon Dental Direct</option>
+                                <option value="zircon_emax_prime_ivoclar">Zircon e-max prime ivoclar</option>
+                                <option value="impress_crown">Impress Crown</option>
+                                <option value="impress_intaly">Impress Intaly</option>
+                                <option value="impress_onlay">Impress Onlay</option>
+                                <option value="impress_overlay">Impress Overlay</option>
+                                <option value="pfm">PFM</option>
+                                <option value="implant_zircon">Implant Zircon</option>
+                                <option value="implant_pfm">Implant PFM</option>
+                                <option value="night_gard">Night Gard</option>
+                                <option value="night_white">Night White</option>
+                                <option value="retainer">Retainer</option>
+                                <option value="study_model">Study Model</option>
+                                <option value="snap_on_smile">Snap On Smile</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="teethImage" style="width:100%; margin-top:2%;">
+                        <img src="@/assets/illustrateTeethimage.png" alt="Teeth Image" width="100%" height="50%">
+                        <label for="req">Requirments</label>
+                        <textarea name="" id="" style="overflow:auto; width:100%; height: 25%"
+                            v-model="note"></textarea>
+                        <a :href="file" :style="{ display: file === null ? 'none' : 'inline' }">Screen File</a>
+                        <div class="container">
+                            <div class="display">
+                                <p>{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider" style="height:50vh; width:100%; display:flex; justify-contnet:center;">
+                        <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false"
+                            data-bs-interval="false" style="width:80%">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img v-if="image" :src="image" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img v-if="image1" :src="image1" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img v-if="image2" :src="image2" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item" v-if="video">
+                                    <video :src="video" class="d-block w-100" controls></video>
+                                </div>
+                                <div style="diplay:flex; justify-content:space-between">
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="print&sub">
+                        <div class="sub">
+                            <button @click="preventSub" class="btn btn" title="Save" type="Submit">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </template>
 
 <script>
 import axios from 'axios';
@@ -185,35 +193,78 @@ export default {
             return name !== "";
         },
         handleAudioFileChange(event) {
-            // Store the selected audio file in the component's data
             this.audioFile = event.target.files[0];
             this.inputURL = this.audioFile;
             console.log(this.inputURL);
         },
         printer() {
-            // document.getElementById('name').style.display = 'block';
-            // document.getElementById('Age').style.display = 'block';
-            // document.getElementById('numberTeeth').style.display = 'block';
-            // document.getElementById('').style.display = 'block';
-            //sex
-            //colors
-            // Print the content
             window.print();
         },
+        preventSub(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('patientName', this.Patientname);
+            formData.append('type', this.type);
+            formData.append('age', this.Age);
+            formData.append('sex', this.sex);
+            formData.append('color', this.Toothcolor);
+            formData.append('teethNo', this.numberofteeth);
+            formData.append('description', this.note);
+            const order_id = this.id
+            axios.put(`https://dentist-backend-ts43.onrender.com/doctors/orders/update/${order_id}/`, formData, {
+            }).then(response => {
+                console.log(response.data)
+                alert("Updated Successfully");
+                this.$router.go(0);
+            }).catch((error) => {
+                if (error.response) {
+                    if (error.response.status === 400) {
+                        alert(error.message, 'try signing out and signing in again');
+                    } else {
+                        alert(`Error: ${error.response.status} - ${error.response.statusText}`);
+                    }
+                } else {
+                    alert('check internet connection');
+                }
+            })
+                //     const order_id = this.id;
+                //     axios.get(`https://backend-reception-robot.onrender.com/labs/orders/${order_id}`, {
+                //         headers: {
+                //             'Authorization': 'DEN ' + localStorage.getItem('token')
+                //         }
+                //     }).then(response => {
+                //         console.log(response.data.gender);
+                //         console.log(this.id);
+                //         this.Patientname = response.data.patientName
+                //         this.Age = response.data.age;
+                //         this.numberofteeth = response.data.teethNo;
+                //         this.Toothcolor = response.data.color;
+                //         this.sex = response.data.sex;
+                //         this.note = response.data.note;
+                //         this.type = response.data.type;
+                //         if (this.sex === '') {
+                //             console.log('sex is empty');
+                //         } else {
+                //             console.log(this.sex);
+                //         }
+                //     })
+                // }).catch(error => {
+                //     console.log(error);
+                // });
+            },
     },
-    created() {
-        const orderId = this.$route.params.id;
-        axios.get(`https://dentist-labs.onrender.com/labs/orders/${orderId}`, {
-            headers: {
-                'Authorization': 'DEN ' + localStorage.getItem('token')
-            }
-        })
-            .then(response => {
+        created() {
+            const orderId = this.$route.params.id;
+            axios.get(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {
+                headers: {
+                    'Authorization': 'DEN ' + localStorage.getItem('token')
+                }
+            }).then(response => {
                 console.log(response.data);
                 this.Patientname = response.data.patientName;
                 this.Age = response.data.age;
-                this.Toothcolor = response.data.color;
                 this.numberofteeth = response.data.teethNo;
+                this.Toothcolor = response.data.color;
                 this.sex = response.data.sex;
                 this.note = response.data.description;
                 this.type = response.data.type;
@@ -221,15 +272,13 @@ export default {
                 this.image1 = response.data.image1;
                 this.image2 = response.data.image2;
                 this.video = response.data.video;
-                this.file = response.data.file;
-                console.log(this.file)
-            })
-            .catch(error => {
-                console.error('Error fetching order:', error);
+                console.log(this.image)
+            }).catch(error => {
+                console.log(error);
             });
-    },
+        },
 
-};
+    };
 </script>
 <style scoped>
 @media print {
@@ -237,8 +286,12 @@ export default {
         display: none;
     }
 
-    .slider{
+    .slider {
         display: none;
+    }
+
+    title {
+        color: blue;
     }
 
     .content {
@@ -279,14 +332,15 @@ label {
 }
 
 /*.carousel-inner video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}*/
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }*/
 
 .carousel-control-next-icon,
 .carousel-control-prev-icon {
-    background-image: none; /* Remove default Bootstrap icon */
+    background-image: none;
+    /* Remove default Bootstrap icon */
 }
 
 .carousel-control-next-icon::after,
@@ -295,7 +349,8 @@ label {
     display: inline-block;
     width: 30px;
     height: 30px;
-    border: solid black; /* Set the color of the arrows */
+    border: solid black;
+    /* Set the color of the arrows */
     border-width: 0 4px 4px 0;
     padding: 5px;
 }
@@ -355,7 +410,6 @@ input {
     margin-top: 20px;
     width: 100%;
     position: relative;
-    /* Set position to relative */
 }
 
 .second_info div {
@@ -375,7 +429,6 @@ input {
 .second_info .form-select {
     width: fit-content;
     flex-grow: 1;
-    /* Allow the select to take remaining space */
 }
 
 .content form {
@@ -395,14 +448,15 @@ div.content {
 }
 
 .printer {
-    position: absolute;
+    position: fixed;
+    bottom: 0;
     right: 0;
     background-color: black;
     border-radius: 10px 0 0 10px;
     width: 50px;
 }
 
-.printer i{
+.printer i {
     color: white;
 }
 
@@ -411,8 +465,8 @@ form {
 }
 
 /*.printer i {
-    color: white;
-}*/
+        color: white;
+    }*/
 
 .sub {
     position: absolute;

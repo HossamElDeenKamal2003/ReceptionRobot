@@ -27,7 +27,7 @@
             <button :disabled="isUsernameEmptyOrNull" class="filter" @click="filterReady">Ready</button>
           </li>
           <li tabindex="0">
-            <!-- <button :disabled="isUsernameEmptyOrNull" class="filter" @click="update(order._id)">Update</button> -->
+            <!-- <button :disabled="isUsernameEmptyOrNull" v-for="(order, index) in filteredOrders" :key="index" class="filter" @click="clickUpdate(order)">Update</button> -->
           </li>
         </ul>
         <div id="search-wrapper">
@@ -59,53 +59,35 @@
             <th>From Doctor</th>
             <th>Status</th>
             <th>Modification Date</th>
-            <th>Residual</th>
             <th>Been Paid</th>
             <th>Price</th>
+            <th>Update</th>
             <th>End Order</th>
           </tr>
           <!-- <tr v-for="(order, index) in filteredOrders" :key="index" :style="{ border: check ? '2px solid green' : '' }> -->
             <tr v-for="(order, index) in filteredOrders" :key="index">
               <td>{{ order.UID }}</td>
               <td>
-              <router-link :to="'/showorder/' + order._id">{{
-                order.patientName
-              }}</router-link>
-            </td>
-            <td>{{ order.doc_id.username }}</td>
-            <td  class="status">{{ order.status }}</td>
-            <td>{{ order.updatedAt }}</td>
-            <!-- <td>{{ order.price-order.paid }}</td> -->
-            <!-- <td>{{ order.paid }}</td> -->
-            <!-- <td>{{ order.price }}</td> -->
-            <td>
-              <input
-                type="text"
-                data-order-id="{{ order.id }}"
-                :value="order.price-order.paid"
-                disabled
-                style="border-bottom: none"
-                placeholder="0.00"
-              />
-            </td>
-            <td>
-              <input
-                type="text" 
-                :data-order-id="order._id"
-                v-model="order.paid"
-                @keyup.enter="update(order._id)"
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                data-order-id="{{ order.id }}"
-                v-model="order.price"
-              />
-            </td>
-            <td><button @click="markOrder(order._id)" class="btn btn-primary btn-sm"><i :class="check ? 'bi bi-check' : 'bi bi-x'"></i></button></td>
-            <!-- <td @click="deleteRow(order._id)"><i class="bi bi-trash"></i></td> -->
-          </tr>
+                <router-link :to="'/showorder/' + order._id">{{ order.patientName }}</router-link>
+              </td>
+              <td>{{ order.doc_id.username }}</td>
+              <td class="status">{{ order.status }}</td>
+              <td>{{ order.updatedAt }}</td>
+              <td>
+                <input type="text" :data-order-id="order._id" v-model="order.paid" @keyup.enter="update(order._id)" />
+              </td>
+              <td>
+                <input type="text" :data-order-id="order._id" v-model="order.price" />
+              </td>
+              <td>
+                <button @click="update(order._id)">Update</button>
+              </td>
+              <td>
+                <button @click="markOrder(order._id)" class="btn btn-primary btn-sm">
+                  <i :class="check ? 'bi bi-check' : 'bi bi-x'"></i>
+                </button>
+              </td>
+            </tr>
         </table>
       </div>
     </div>
@@ -162,7 +144,7 @@ export default {
     const role = localStorage.getItem('role');
     if(this.flag === true){
       if (role === 'LAB') {
-      axios.get('https://dentist-labs.onrender.com/labs/orders', {
+      axios.get('https://dentist-backend-ts43.onrender.com/labs/orders', {
         headers: {
           'Authorization': 'DEN ' + localStorage.getItem('token')
         }
@@ -184,7 +166,7 @@ export default {
     const role = localStorage.getItem('role');
     if (role === 'LAB') {
       const isUnderway = this.filteredOrders.find(order => order.UID === ID).status === 'Underway';
-      axios.patch(`https://dentist-labs.onrender.com/labs/orders/${ID}`, {
+      axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/${ID}`, {
         status: isUnderway ? 'Ready' : 'Underway'
       }, {
         headers: {
@@ -198,13 +180,13 @@ export default {
       });
     } else {
       console.log('Unauthorized access: User role is not LAB');
-      // You can handle unauthorized access here, such as showing a message or redirecting the user
     }
   },
   
   update(id) {
-  axios.patch(`https://dentist-labs.onrender.com/labs/orders/paid/${id}`, {
+  axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/paid/${id}`, {
     paid: this.filteredOrders.find(order => order._id === id).paid,
+    price:this.filteredOrders.find(order => order._id).price
   }, {
     headers: {
       'Authorization': 'DEN ' + localStorage.getItem('token')
@@ -217,7 +199,7 @@ export default {
   });
 },
 markOrder(orderId) {
-  axios.patch(`https://dentist-labs.onrender.com/labs/orders/${orderId}`, {}, {
+  axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {}, {
     headers: {
       'Authorization': 'DEN ' + localStorage.getItem('token')
     }
@@ -241,7 +223,7 @@ markOrder(orderId) {
   const isSubscribed = localStorage.getItem('delSub') === 'true';
   const role = localStorage.getItem('role');
   if (role === 'LAB') {
-    axios.patch('https://dentist-labs.onrender.com/labs/public', {
+    axios.patch('https://dentist-backend-ts43.onrender.com/labs/public', {
       publicDelivery: !isSubscribed,
     }, {
       headers: {

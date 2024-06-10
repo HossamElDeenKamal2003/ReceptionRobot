@@ -98,7 +98,7 @@ export default {
         },
         filterunderway() {
             this.fetchingData = false; // Stop fetching data
-            axios.get('https://api.receptionrobot.net/api/doctor/all_orders/?status=u').then(response => {
+            axios.get('https://dentist-backend-ts43.onrender.com/api/doctor/all_orders/?status=u').then(response => {
                 this.orders = response.data;
                 this.orders.forEach(order => {
                     order.status = "UnderWay";
@@ -113,7 +113,7 @@ export default {
         },
         filterend() {
             this.fetchingData = false; // Stop fetching data
-            axios.get('http://127.0.0.1:8000/api/doctor/all_orders/?status=e').then(response => {
+            axios.get('https://dentist-backend-ts43.onrender.com/api/doctor/all_orders/?status=e').then(response => {
                 this.orders = response.data;
                 this.orders.forEach(order => {
                     order.status = "End";
@@ -132,9 +132,9 @@ export default {
             this.filteredOrders = this.orders;
         },
         deleteRow(orderId) {
-            const response = axios.get('http://127.0.0.1:8000/api/doctor/all_orders/');
+            const response = axios.get('https://dentist-backend-ts43.onrender.com/api/doctor/all_orders/');
             const order_id = response.data.id;
-            axios.delete(`https://api.receptionrobot.net/api/delete_order/${order_id}/`).then(() => {
+            axios.delete(`https://dentist-backend-ts43.onrender.com/api/delete_order/${order_id}/`).then(() => {
                 alert("Item Deleted Successfully");
                 const index = this.orders.findIndex(order => order.id === orderId);
                 if (index !== -1) {
@@ -153,7 +153,7 @@ export default {
                 return;
             }
             if(this.fetchingData){
-            axios.get('https://api.receptionrobot.net/doctors/financial',{
+            axios.get('https://dentist-backend-ts43.onrender.com/doctors/financial',{
                 headers: {
                 'Authorization': 'DEN ' + localStorage.getItem('token')
                 }

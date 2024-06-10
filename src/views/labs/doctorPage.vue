@@ -42,7 +42,7 @@ export default {
     },
     methods: {
         deleteCard(doctor_id) {
-            axios.delete(`https://api.receptionrobot.net/labs/deleteDoc/${doctor_id}`, {
+            axios.delete(`https://dentist-backend-ts43.onrender.com/labs/deleteDoc/${doctor_id}`, {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -57,7 +57,7 @@ export default {
             });
         },
         addDoctor(id) {
-            axios.post(`https://dentist-labs.onrender.com/labs/addDoc/${id}`, {}, {
+            axios.post(`https://dentist-backend-ts43.onrender.com/labs/addDoc/${id}`, {}, {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }
@@ -70,7 +70,7 @@ export default {
             });
         },
         fetchDoctors() {
-            axios.get('https://dentist-labs.onrender.com/labs/doctors',{
+            axios.get('https://dentist-backend-ts43.onrender.com/labs/doctors',{
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
                 }

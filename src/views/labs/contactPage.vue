@@ -24,9 +24,9 @@
       </div>
       <div class="types">
         <div class="labels">
-          <h2>Zircon Wave</h2>
-          <h2>Zircon Dental Direct</h2>
-          <h2>Zircon e-max prime ivoclar</h2>
+          <h2>Zircon</h2>
+          <!-- <h2>Zircon Dental Direct</h2>
+          <h2>Zircon e-max prime ivoclar</h2> -->
           <h2>Impress Crown</h2>
           <h2>Impress Intaly</h2>
           <h2>Impress Onlay</h2>
@@ -41,9 +41,10 @@
           <h2>Snap On Smile</h2>
         </div>
         <div class="prices">
-          <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_wave">
-          <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_dental_direct">
-          <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_emax_prime_ivoclar">
+          <!-- <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_wave"> -->
+          <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon">
+          <!-- <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_dental_direct"> -->
+          <!-- <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_emax_prime_ivoclar"> -->
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_crown">
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_intaly">
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_onlay">
@@ -79,9 +80,10 @@ export default {
       contract: {
         name: "",
         code: "",
-        zircon_wave: 0,
-        zircon_dental_direct: 0,
-        zircon_emax_prime_ivoclar: 0,
+        zircon: 0,
+        // zircon_wave: 0,
+        // zircon_dental_direct: 0,
+        // zircon_emax_prime_ivoclar: 0,
         impress_crown: 0,
         impress_intaly: 0,
         impress_onlay: 0,
@@ -111,9 +113,10 @@ export default {
 
       // Parse contract values to ensure they are numbers
       const contractData = {
-        zircon_wave: Number(this.contract.zircon_wave),
-        zircon_dental_direct: Number(this.contract.zircon_dental_direct),
-        zircon_emax_prime_ivoclar: Number(this.contract.zircon_emax_prime_ivoclar),
+        // zircon_wave: Number(this.contract.zircon_wave),
+        // zircon_dental_direct: Number(this.contract.zircon_dental_direct),
+        // zircon_emax_prime_ivoclar: Number(this.contract.zircon_emax_prime_ivoclar),
+        zircon: Number(this.contract.zircon),
         impress_crown: Number(this.contract.impress_crown),
         impress_intaly: Number(this.contract.impress_intaly),
         impress_onlay: Number(this.contract.impress_onlay),
@@ -130,7 +133,7 @@ export default {
 
       axios
         .put(
-          `https://dentist-labs.onrender.com/labs/contract/${id}`,
+          `https://dentist-backend-ts43.onrender.com/labs/contract/${id}`,
           { contract: contractData },
           {
             headers: {
@@ -155,8 +158,7 @@ export default {
     this.code = id;
     console.log(id);
 
-    axios
-      .get(`https://dentist-labs.onrender.com/labs/contract/${id}`, {
+    axios.get(`https://dentist-backend-ts43.onrender.com/labs/contract/${id}`, {
         headers: {
           Authorization: "DEN " + localStorage.getItem("token"),
         },

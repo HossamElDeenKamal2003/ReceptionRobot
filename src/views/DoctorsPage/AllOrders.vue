@@ -123,7 +123,7 @@ export default {
             }
             let ApiUrl;
             if (this.filterForSearch == "") {
-                ApiUrl = 'https://dentist-labs.onrender.com/doctors/orders'
+                ApiUrl = 'https://dentist-backend-ts43.onrender.com/doctors/orders'
             }
 
             axios.get(ApiUrl, {

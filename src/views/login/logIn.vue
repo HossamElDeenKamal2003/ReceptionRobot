@@ -458,7 +458,7 @@ export default {
         },
         getCurrentLocationAndSubmit(event) {
             event.preventDefault();
-                let createUser_API = 'https://dentist-labs.onrender.com/users/signup';
+                let createUser_API = 'https://dentist-backend-ts43.onrender.com/users/signup';
                 axios.post(createUser_API, {
                         "username": this.signUp.usernameSign,
                         "phone":this.signUp.phoneNumber,
@@ -482,7 +482,7 @@ export default {
         },
         Login(e) {
             e.preventDefault();
-            axios.post('https://dentist-labs.onrender.com/users/login', {
+            axios.post('https://dentist-backend-ts43.onrender.com/users/login', {
                 username: this.login.usernameLog,
                 password: this.login.passwordLog,
             }).then(response => {

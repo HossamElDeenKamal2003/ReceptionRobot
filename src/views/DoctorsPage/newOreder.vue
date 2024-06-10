@@ -7,6 +7,10 @@
         <div class="content" style="overflow:auto;">
             <form @submit.prevent="preventSub">
                 <div class="basic-info">
+                    <div> 
+                        <input type="checkbox" id="prov" v-model="checkboxChecked" @change="handleCheckboxChange">
+                        <label for="prov" style="font-size:larger">Final</label>
+                    </div> 
                     <div>
                         <label for="name">Patient Name : </label>
                         <input type="text" placeholder="Name" id="name" v-model="Patientname">
@@ -58,9 +62,10 @@
                     <div>
                         <label class="form-label">Type</label>
                         <select class="form-select" v-model="type">
-                            <option value="zircon_wave">Zircon Wave</option>
+                            <!-- <option value="zircon_wave">Zircon Wave</option>
                             <option value="zircon_dental_direct">Zircon Dental Direct</option>
-                            <option value="zircon_emax_prime_ivoclar">Zircon e-max prime ivoclar</option>
+                            <option value="zircon_emax_prime_ivoclar">Zircon e-max prime ivoclar</option> -->
+                            <option value="zircon">Zircon</option>
                             <option value="impress_crown">Impress Crown</option>
                             <option value="impress_intaly">Impress Intaly</option>
                             <option value="impress_onlay">Impress Onlay</option>
@@ -116,6 +121,8 @@ export default {
     name: "newOrder",
     data() {
         return {
+            checkboxChecked:false,
+            prov: true,
             isActiveSidebar: false,
             users: [],
             Patientname: "",
@@ -145,6 +152,11 @@ export default {
         };
     },
     methods: {
+        handleCheckboxChange() {
+            if (this.checkboxChecked) {
+                this.prov = false;
+            }
+        },
         handleFileChange(event) {
             const files = event.target.files;
             for (let i = 0; i < files.length; i++) {
@@ -190,20 +202,25 @@ export default {
             formData.append('teethNo', this.numberofteeth);
             formData.append('description', this.note);
             formData.append('type', this.type);
-            // this.images.forEach((image) => {
-            //     formData.append('images[]', image);
-            // });
             formData.append('image', this.image);
             formData.append('image1', this.image1);
             formData.append('image2', this.image2);
             formData.append('video', this.video);
             formData.append('file', this.file);
-            axios.post('https://dentist-labs.onrender.com/doctors/orders/add', formData, {
+            formData.append('prova', this.prov);
+            const formData2 = new FormData();
+            formData2.append('image', this.image);
+            formData2.append('image1', this.image1);
+            formData2.append('image2', this.image2);
+            formData2.append('video', this.video);
+            formData2.append('file', this.file);
+            axios.post('https://dentist-backend-ts43.onrender.com/doctors/orders/add', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': 'DEN ' + localStorage.getItem('token'),
                 }
             }).then((response) => {
+                console.log(this.prov)
                 alert("order sent successfully");
                 console.log(formData);
                 console.log(response.data);
@@ -216,6 +233,12 @@ export default {
                     alert("An error occurred while sending the order. Please try again.");
                 }
             })
+            // axios.post('',formData2,{
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data',
+            //         'Authorization': 'DEN ' + localStorage.getItem('token'),
+            //     }
+            // })
         },
     },
 
