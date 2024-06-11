@@ -50,16 +50,24 @@
                                     order.lab_id.username }}</button>
                         </td> -->
                         <td>
-                            <button v-if="order.status === 'LabReady(P)'||order.status === 'LabReady(F)'  || order.status ==='OTW_DOC(P)' || order.status === 'OTW_DOC(F)'|| order.status === 'End(P)' || order.status ==='End(F)' "
-                                @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{ order.lab_id.username }}</button>
-                            <button v-else-if="order.status === 'DocReady(P)'||order.status==='DocReady(F)' || order.status === 'OTW_LAB(P)'||order.status==='OTW_LAB(F)' || order.status === 'UNDERWAY(P)'||order.status === 'UNDERWAY(F)'"
-                                @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{ order.doc_id.username }}</button>
+                            <button
+                                v-if="order.status === 'LabReady(P)' || order.status === 'LabReady(F)' || order.status === 'OTW_DOC(P)' || order.status === 'OTW_DOC(F)' || order.status === 'End(P)' || order.status === 'End(F)'"
+                                @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{
+                                order.lab_id.username }}</button>
+                            <button
+                                v-else-if="order.status === 'DocReady(P)' || order.status === 'DocReady(F)' || order.status === 'OTW_LAB(P)' || order.status === 'OTW_LAB(F)' || order.status === 'UNDERWAY(P)' || order.status === 'UNDERWAY(F)'"
+                                @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{
+                                order.doc_id.username }}</button>
                         </td>
                         <td>
-                            <button v-if="order.status === 'LabReady(P)'||order.status === 'LabReady(F)' || order.status ==='OTW_DOC(P)'||order.status === 'OTW_DOC(F)'|| order.status === 'End(P)'||order.status === 'End(F)'"
-                                @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{ order.doc_id.username }}</button>
-                            <button v-else-if="order.status === 'DocReady(P)'||order.status === 'DocReady(F)'|| order.status === 'OTW_LAB(P)'|| order.status === 'OTW_LAB(F)'||order.status==='OTW_Ready(F)' || order.status === 'UNDERWAY(P)'||order.status==='UNDERWAY(F)'"
-                                @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{ order.lab_id.username }}</button>
+                            <button
+                                v-if="order.status === 'LabReady(P)' || order.status === 'LabReady(F)' || order.status === 'OTW_DOC(P)' || order.status === 'OTW_DOC(F)' || order.status === 'End(P)' || order.status === 'End(F)'"
+                                @click="addressDoc(order.doc_id.buildNo, order.doc_id.floorNo, order.doc_id.username, order.doc_id.address)">{{
+                                order.doc_id.username }}</button>
+                            <button
+                                v-else-if="order.status === 'DocReady(P)' || order.status === 'DocReady(F)' || order.status === 'OTW_LAB(P)' || order.status === 'OTW_LAB(F)' || order.status === 'OTW_Ready(F)' || order.status === 'UNDERWAY(P)' || order.status === 'UNDERWAY(F)'"
+                                @click="addressDoc(order.lab_id.buildNo, order.lab_id.floorNo, order.lab_id.username, order.lab_id.address)">{{
+                                order.lab_id.username }}</button>
                         </td>
                         <td>
                             {{ order.status }}
@@ -110,7 +118,7 @@ export default {
             searchFilter: "",
             searchFilterType: "id",
             order_id: "",
-            addressDel:"",
+            addressDel: "",
         };
     },
     methods: {
@@ -147,7 +155,22 @@ export default {
                 this.filteredOrders.reverse();
                 console.log(this.filteredOrders);
             }).catch((error) => {
-                console.error('Error fetching data:', error);
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
             });
         },
         addressDoc(buildingno, floorno, name, address) {
@@ -194,12 +217,12 @@ export default {
                 }).catch((error) => {
                     console.error('Error delivering order:', error);
                 });
-            }else if(order.status === 'OTW_DOC(P)' || order.status === 'OTW_DOC(F)'){
-                axios.patch(`https://dentist-backend-ts43.onrender.com/deliverers/orders/doc/delivered/${order._id}`,{},{
+            } else if (order.status === 'OTW_DOC(P)' || order.status === 'OTW_DOC(F)') {
+                axios.patch(`https://dentist-backend-ts43.onrender.com/deliverers/orders/doc/delivered/${order._id}`, {}, {
                     headers: {
                         'Authorization': 'DEN ' + localStorage.getItem('token')
                     }
-                }).then(()=>{
+                }).then(() => {
                     this.searchTerm = '';
                     this.filterend();
                 })

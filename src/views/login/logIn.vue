@@ -474,11 +474,27 @@ export default {
                       localStorage.setItem('id', response.data.user.UID);
                       localStorage.setItem('contract', response.data.labContract)
                       this.$router.push('/');
-                    }).catch((error=>{
-                      if(error.response && error.response.status === 500){
-                        alert("Please enter all data");
-                      }
-                    }))
+                    }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        case 500:
+                          alert("Please Enter All Data");
+                          break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
         },
         Login(e) {
             e.preventDefault();
@@ -495,13 +511,24 @@ export default {
                 localStorage.setItem('contract', JSON.stringify(response.data.user.labContract));
                 //console.log(response.data.user.role);
                 this.$router.push('/');
-            }).catch(error => {
-                if (error.response && error.response.status === 401) {
-            // Unauthorized access, i.e., incorrect username or password
-                    alert('Incorrect username or password. Please try again.');
+            }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        case 404:
+                          alert("User not found");
+                          break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
                 } else {
-                    // Other errors
-                    alert('An error occurred while logging in. Please try again later try check your internet connection');
+                    alert('Check your internet connection');
                 }
             });
         },

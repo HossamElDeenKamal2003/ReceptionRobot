@@ -108,13 +108,13 @@ export default {
             this.filteredOrders = this.orders;
         },
         filterunderway() {
-            this.filteredOrders = this.orders.filter(order => order.status === "UNDERWAY(P)"||order.status === "UNDERWAY(F)");
+            this.filteredOrders = this.orders.filter(order => order.status === "UNDERWAY(P)" || order.status === "UNDERWAY(F)");
         },
         filterend() {
-            this.filteredOrders = this.orders.filter(order => order.status === "End(P)"||order.status === "End(F)");
+            this.filteredOrders = this.orders.filter(order => order.status === "End(P)" || order.status === "End(F)");
         },
         filterReady() {
-            this.filteredOrders = this.orders.filter(order => order.status === "DocReady(P)"||order.status==="LabReady(F)");
+            this.filteredOrders = this.orders.filter(order => order.status === "DocReady(P)" || order.status === "LabReady(F)");
         },
 
         fetchData() {
@@ -125,7 +125,6 @@ export default {
             if (this.filterForSearch == "") {
                 ApiUrl = 'https://dentist-backend-ts43.onrender.com/doctors/orders'
             }
-
             axios.get(ApiUrl, {
                 headers: {
                     'Authorization': 'DEN ' + localStorage.getItem('token')
@@ -133,8 +132,23 @@ export default {
             }).then(response => {
                 this.orders = response.data.reverse();
                 this.filteredOrders = this.orders;
-            }).catch(error => {
-                console.error("Error fetching data:", error);
+            }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
             });
         },
     },

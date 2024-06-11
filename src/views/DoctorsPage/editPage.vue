@@ -259,6 +259,23 @@ export default {
             //     })
             // }).catch(error => {
             //     console.log(error);
+            }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
             });
         },
         printer() {
@@ -286,9 +303,24 @@ export default {
             this.image2 = response.data.image2;
             this.video = response.data.video;
             console.log(this.image)
-        }).catch(error => {
-            console.log(error);
-        });
+        }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
         // axios.get(`/${order_id}`).then((response)=>{
         //         this.image = response.data.image;
         //         this.image1 = response.image1;

@@ -70,14 +70,27 @@ export default {
                 totalPaid: doctor.totalPaid,
                 price: doctor.totalPrice
             }));
-        }).catch(error => {
-            console.error('Error fetching finance data:', error);
-            if (error.response && error.response.status === 401) {
-                alert('Unauthorized access. Please check your token.');
-            } else {
-                this.doctorData = [];
-            }
-        });
+        }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        case 404:
+                            alert("No Data");
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
     }
     },
     created(){

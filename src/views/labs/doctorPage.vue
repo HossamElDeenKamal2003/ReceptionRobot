@@ -51,9 +51,23 @@ export default {
                 alert('Doctor deleted successfully');
                 this.fetchDoctors();
             })
-            .catch(error => {
-                console.error(error);
-                alert('Failed to delete doctor');
+            .catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
             });
         },
         addDoctor(id) {
@@ -64,9 +78,23 @@ export default {
             }).then(() => {
                 alert('Doctor Added Successfully');
                 this.fetchDoctors();
-            }).catch(error => {
-                console.error(error);
-                alert('Failed to add doctor');
+            }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
             });
         },
         fetchDoctors() {
@@ -87,9 +115,24 @@ export default {
                 });
                 // this.doctors.name = response.data.name;
                 // this.doctors.id = response.data.userId;
-            }).catch(error => {
-                console.log(error);
-            })
+            }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
         }
     },
     created() {

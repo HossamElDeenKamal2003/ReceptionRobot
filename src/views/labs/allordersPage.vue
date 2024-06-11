@@ -66,28 +66,28 @@
           </tr>
           <!-- <tr v-for="(order, index) in filteredOrders" :key="index" :style="{ border: check ? '2px solid green' : '' }> -->
             <tr v-for="(order, index) in filteredOrders" :key="index">
-              <td>{{ order.UID }}</td>
-              <td>
-                <router-link :to="'/showorder/' + order._id">{{ order.patientName }}</router-link>
-              </td>
-              <td>{{ order.doc_id.username }}</td>
-              <td class="status">{{ order.status }}</td>
-              <td>{{ order.updatedAt }}</td>
-              <td>
-                <input type="text" :data-order-id="order._id" v-model="order.paid" @keyup.enter="update(order._id)" />
-              </td>
-              <td>
-                <input type="text" :data-order-id="order._id" v-model="order.price" />
-              </td>
-              <td>
-                <button @click="update(order._id)">Update</button>
-              </td>
-              <td>
-                <button @click="markOrder(order._id)" class="btn btn-primary btn-sm">
-                  <i :class="check ? 'bi bi-check' : 'bi bi-x'"></i>
-                </button>
-              </td>
-            </tr>
+            <td>{{ order.UID }}</td>
+            <td>
+              <router-link :to="'/showorder/' + order._id">{{ order.patientName }}</router-link>
+            </td>
+            <td>{{ order.doc_id.username }}</td>
+            <td class="status">{{ order.status }}</td>
+            <td>{{ order.updatedAt }}</td>
+            <td>
+              <input type="text" :data-order-id="order._id" v-model="order.paid" @keyup.enter="update(order._id)" />
+            </td>
+            <td>
+              <input type="text" :data-order-id="order._id" v-model="order.price" />
+            </td>
+            <td>
+              <button @click="update(order._id)">Update</button>
+            </td>
+            <td>
+              <button @click="markOrder(order._id)" class="btn btn-primary btn-sm">
+                <i :class="check ? 'bi bi-check' : 'bi bi-x'"></i>
+              </button>
+            </td>
+          </tr>
         </table>
       </div>
     </div>
@@ -153,9 +153,23 @@ export default {
         this.filteredOrders = this.orders;
         // this.filteredOrders.reverse();
       }).catch((error) => {
-        // Handle error
-        console.error('An error occurred:', error.message);
-      });
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
     } else {
       console.log('Unauthorized access: User role is not LAB');
     }
@@ -175,9 +189,24 @@ export default {
       }).then(response => {
         console.log(response.data);
         this.fetchData();
-      }).catch(error => {
-        console.error('An error occurred:', error.message);
-      });
+      }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
     } else {
       console.log('Unauthorized access: User role is not LAB');
     }
@@ -194,9 +223,24 @@ export default {
   }).then(response => {
     console.log(response.data);
     this.fetchData();
-  }).catch(error => {
-    console.error('An error occurred:', error.message);
-  });
+  }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
 },
 markOrder(orderId) {
   axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {}, {
@@ -209,14 +253,24 @@ markOrder(orderId) {
     console.log('Order marked successfully:', response.data);
     this.fetchData();
   })
-  .catch(error => {
-    if (error.response && error.response.status === 400) {
-      console.error('Failed to mark order:', error.response.data);
-      alert("Cannot set order end");
-    } else {
-      console.error('An error occurred:', error.message);
-    }
-  });
+  .catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
   },
 
   manage_sub() {
@@ -238,9 +292,24 @@ markOrder(orderId) {
         localStorage.setItem('delSub', 'false');
       }
       //console.log(response.data);
-    }).catch(error => {
-      console.error('An error occurred:', error.message);
-    });
+    }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
   } else {
     console.log('Unauthorized access: User role is not LAB');
   }

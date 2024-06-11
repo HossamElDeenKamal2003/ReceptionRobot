@@ -218,67 +218,89 @@ export default {
                 this.$router.go(0);
             }).catch((error) => {
                 if (error.response) {
-                    if (error.response.status === 400) {
-                        alert(error.message, 'try signing out and signing in again');
-                    } else {
-                        alert(`Error: ${error.response.status} - ${error.response.statusText}`);
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
                     }
                 } else {
-                    alert('check internet connection');
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
                 }
             })
-                //     const order_id = this.id;
-                //     axios.get(`https://backend-reception-robot.onrender.com/labs/orders/${order_id}`, {
-                //         headers: {
-                //             'Authorization': 'DEN ' + localStorage.getItem('token')
-                //         }
-                //     }).then(response => {
-                //         console.log(response.data.gender);
-                //         console.log(this.id);
-                //         this.Patientname = response.data.patientName
-                //         this.Age = response.data.age;
-                //         this.numberofteeth = response.data.teethNo;
-                //         this.Toothcolor = response.data.color;
-                //         this.sex = response.data.sex;
-                //         this.note = response.data.note;
-                //         this.type = response.data.type;
-                //         if (this.sex === '') {
-                //             console.log('sex is empty');
-                //         } else {
-                //             console.log(this.sex);
-                //         }
-                //     })
-                // }).catch(error => {
-                //     console.log(error);
-                // });
-            },
-    },
-        created() {
-            const orderId = this.$route.params.id;
-            axios.get(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {
-                headers: {
-                    'Authorization': 'DEN ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                console.log(response.data);
-                this.Patientname = response.data.patientName;
-                this.Age = response.data.age;
-                this.numberofteeth = response.data.teethNo;
-                this.Toothcolor = response.data.color;
-                this.sex = response.data.sex;
-                this.note = response.data.description;
-                this.type = response.data.type;
-                this.image = response.data.image;
-                this.image1 = response.data.image1;
-                this.image2 = response.data.image2;
-                this.video = response.data.video;
-                console.log(this.image)
-            }).catch(error => {
-                console.log(error);
-            });
+            //     const order_id = this.id;
+            //     axios.get(`https://backend-reception-robot.onrender.com/labs/orders/${order_id}`, {
+            //         headers: {
+            //             'Authorization': 'DEN ' + localStorage.getItem('token')
+            //         }
+            //     }).then(response => {
+            //         console.log(response.data.gender);
+            //         console.log(this.id);
+            //         this.Patientname = response.data.patientName
+            //         this.Age = response.data.age;
+            //         this.numberofteeth = response.data.teethNo;
+            //         this.Toothcolor = response.data.color;
+            //         this.sex = response.data.sex;
+            //         this.note = response.data.note;
+            //         this.type = response.data.type;
+            //         if (this.sex === '') {
+            //             console.log('sex is empty');
+            //         } else {
+            //             console.log(this.sex);
+            //         }
+            //     })
+            // }).catch(error => {
+            //     console.log(error);
+            // });
         },
+    },
+    created() {
+        const orderId = this.$route.params.id;
+        axios.get(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {
+            headers: {
+                'Authorization': 'DEN ' + localStorage.getItem('token')
+            }
+        }).then(response => {
+            console.log(response.data);
+            this.Patientname = response.data.patientName;
+            this.Age = response.data.age;
+            this.numberofteeth = response.data.teethNo;
+            this.Toothcolor = response.data.color;
+            this.sex = response.data.sex;
+            this.note = response.data.description;
+            this.type = response.data.type;
+            this.image = response.data.image;
+            this.image1 = response.data.image1;
+            this.image2 = response.data.image2;
+            this.video = response.data.video;
+            console.log(this.image)
+        }).catch((error) => {
+            if (error.response) {
+                // Handle errors based on response status code
+                switch (error.response.status) {
+                    case 400:
+                        alert(error.message, 'try signing out and signing in again');
+                        break;
+                    case 401:
+                        alert(error.response.data);
+                        break;
+                    default:
+                        alert('An error occurred: ' + error.message);
+                }
+            } else {
+                // Handle network errors or errors without a response
+                alert('Check your internet connection');
+            }
+        })
+    },
 
-    };
+};
 </script>
 <style scoped>
 @media print {

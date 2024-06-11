@@ -225,14 +225,24 @@ export default {
                 console.log(formData);
                 console.log(response.data);
                 //this.$router.go();
-            }).catch(error => {
-                console.error("Error fetching data:", error);
-                if (error.response.status === 400) {
-                    alert("Doctor not registered on a lab");
+            }).catch((error) => {
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
                 } else {
-                    alert("An error occurred while sending the order. Please try again.");
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
                 }
-            })
+            });
             // axios.post('',formData2,{
             //     headers: {
             //         'Content-Type': 'multipart/form-data',

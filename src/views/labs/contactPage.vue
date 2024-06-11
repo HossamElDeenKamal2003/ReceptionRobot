@@ -147,8 +147,23 @@ export default {
           this.$router.push("/doctorLab");
         })
         .catch((error) => {
-          console.log(error);
-        });
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
     },
   },
   created() {
@@ -172,8 +187,23 @@ export default {
         console.log(this.contract);
       })
       .catch((error) => {
-        console.log(error);
-      });
+                if (error.response) {
+                    // Handle errors based on response status code
+                    switch (error.response.status) {
+                        case 400:
+                            alert(error.message, 'try signing out and signing in again');
+                            break;
+                        case 401:
+                            alert(error.response.data);
+                            break;
+                        default:
+                            alert('An error occurred: ' + error.message);
+                    }
+                } else {
+                    // Handle network errors or errors without a response
+                    alert('Check your internet connection');
+                }
+            });
 
     if (this.$route.path !== "/contact") {
       this.button = "Update";
