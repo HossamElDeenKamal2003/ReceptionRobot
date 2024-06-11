@@ -229,6 +229,9 @@ export default {
                 if (error.response) {
                     // Handle errors based on response status code
                     switch (error.response.status) {
+                        case 500:
+                            alert("Sure All Data Are Done && Sure That Type Is Exist In Contract");
+                            break;
                         case 400:
                             alert(error.message, 'try signing out and signing in again');
                             break;

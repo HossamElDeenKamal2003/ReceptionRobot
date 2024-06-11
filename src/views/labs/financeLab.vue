@@ -8,7 +8,7 @@
                     <input type="date" v-model="startDate">
                     <label>To</label>
                     <input type="date" v-model="endDate">
-                    <button :disabled="isFetchDisabled" @click="fetchFinanceData">Fetch Data</button>
+                    <button class="btn btn-sm" :disabled="isFetchDisabled" @click="fetchFinanceData">Fetch Data</button>
                 </div>
                 <div class="head">
                     <p>Doctor Name</p>
@@ -82,6 +82,7 @@ export default {
                             break;
                         case 404:
                             alert("No Data");
+                            this.doctorData =[];
                             break;
                         default:
                             alert('An error occurred: ' + error.message);
@@ -117,20 +118,26 @@ export default {
     overflow: auto;
 }
 
+.head{
+    display: flex;
+}
+
 @media (max-width: 768px) {
     .data {
         width: 100%;
         height: 100vh;
     }
+
+    .finance .data .calendar input{
+        width: 100%;
+    }
 }
 
 .head {
-    display: grid;
     justify-content: space-around;
     margin-top: 15px;
     color: #33a1f1;
     font-weight: bold;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .data input {

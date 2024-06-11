@@ -62,9 +62,7 @@
                             <label class="form-label">Type</label>
                             <select class="form-select" v-model="type">
                                 <option :value="type">{{ type }}</option>
-                                <option value="zircon_wave">Zircon Wave</option>
-                                <option value="zircon_dental_direct">Zircon Dental Direct</option>
-                                <option value="zircon_emax_prime_ivoclar">Zircon e-max prime ivoclar</option>
+                                <option value="zircon">Zircon</option>
                                 <option value="impress_crown">Impress Crown</option>
                                 <option value="impress_intaly">Impress Intaly</option>
                                 <option value="impress_onlay">Impress Onlay</option>
@@ -221,7 +219,7 @@ export default {
                     // Handle errors based on response status code
                     switch (error.response.status) {
                         case 400:
-                            alert(error.message, 'try signing out and signing in again');
+                            alert("An Error Occured Sure That Type Is Exist In Contract For This Doctor");
                             break;
                         case 401:
                             alert(error.response.data);
