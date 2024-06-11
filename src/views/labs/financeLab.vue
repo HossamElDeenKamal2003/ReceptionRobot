@@ -118,9 +118,6 @@ export default {
     overflow: auto;
 }
 
-.head{
-    display: flex;
-}
 
 @media (max-width: 768px) {
     .data {
@@ -134,10 +131,12 @@ export default {
 }
 
 .head {
+    display: grid;
     justify-content: space-around;
     margin-top: 15px;
     color: #33a1f1;
     font-weight: bold;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .data input {
