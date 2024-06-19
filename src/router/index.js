@@ -3,7 +3,7 @@ import homeView from "../views/Home/homeView.vue";
 import logIn from "@/views/login/logIn.vue";
 import doctorView from "@/views/DoctorsPage/doctorView.vue";
 import allOrders from "@/views/DoctorsPage/AllOrders.vue";
-import deliveryPage from "@/views/DoctorsPage/deliveryPage.vue";
+// import deliveryPage from "@/views/DoctorsPage/deliveryPage.vue";
 import financePage from "@/views/DoctorsPage/financePage.vue";
 import editPage from "@/views/DoctorsPage/editPage.vue";
 import socialPage from "@/views/social/mainPage.vue";
@@ -12,7 +12,7 @@ import deliveryAdmin from "@/views/delivery/deliveryadminPage.vue";
 import financeDel from "@/views/delivery/financeDel.vue";
 import contactLab from "@/views/labs/contactPage.vue";
 import doctorLab from "@/views/labs/doctorPage.vue";
-import deliveryLab from "@/views/labs/deliveryLab.vue";
+import TimingLab from "@/views/labs/deliveryLab.vue";
 import financeLabs from "@/views/labs/financeLab.vue";
 import showOrder from "@/views/labs/showOrder.vue";
 import adminPanel from "@/components/admin/adminPanel.vue";
@@ -44,9 +44,9 @@ const routes = [
     component: allOrders,
   },
   {
-    path:"/delievry",
-    name:"delievery",
-    component:deliveryPage,
+    path:"/timing",
+    name:"TimingLab",
+    component:TimingLab,
   },
   {
     path:"/finance",
@@ -100,11 +100,11 @@ const routes = [
     name:"doctorLab",
     component:doctorLab,
   },
-  {
-    path:"/deliveryLabs",
-    name:"deliveryLabs",
-    component:deliveryLab,
-  },
+  // {
+  //   path:"/deliveryLabs",
+  //   name:"deliveryLabs",
+  //   component:deliveryLab,
+  // },
   {
     path:"/showorder/:id",
     name:"showOrder",

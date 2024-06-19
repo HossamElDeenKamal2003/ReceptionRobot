@@ -1,20 +1,26 @@
     <template>
         <section class="all-orders">
             <div class="sidebar" :class="{ 'active': isActiveSidebar }">
-                <router-link to="/delievry">Delievery</router-link>
-                <router-link to="/finance">Finance</router-link>
+                <router-link to="/Timing">Timing</router-link>
+                <router-link to="/financeLabs">Finance</router-link>
             </div>
             <div class="content" style="overflow:auto;height:100vh;">
-
                 <form action="">
                     <div class="basic-info">
+                        <div>
+                            <p>{{date}}</p>
+                            <div>
+                                <label for="date">Date</label>
+                                <input type="date" id="date" v-model="date">
+                            </div>
+                        </div>
                         <div>
                             <label for="name">Patient Name : </label>
                             <input type="text" placeholder="Name" id="name" v-model="Patientname">
                             <p style="color: red;" v-text="this.errorName"></p>
                         </div>
                         <div>
-                            <label for="Age">Age : </label>
+                            <label for="Age">Age : </label> 
                             <input type="text" placeholder="Age" id="Age" v-model="Age">
                         </div>
                         <div>
@@ -174,6 +180,7 @@ export default {
             image2: null,
             video: null,
             file: null,
+            date: "",
             // toothColors: ["A1", "A2", "A3", "A3.5", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D2", "D3", "D4", "BL1", "BL2", "BL3", "BL4"],
         };
     },
@@ -208,6 +215,7 @@ export default {
             formData.append('color', this.Toothcolor);
             formData.append('teethNo', this.numberofteeth);
             formData.append('description', this.note);
+            formData.append('date', this.date);
             const order_id = this.id
             axios.put(`https://dentist-backend-ts43.onrender.com/doctors/orders/update/${order_id}/`, formData, {
             }).then(response => {
@@ -277,6 +285,7 @@ export default {
             this.image1 = response.data.image1;
             this.image2 = response.data.image2;
             this.video = response.data.video;
+            this.date = response.data.date;
             console.log(this.image)
         }).catch((error) => {
             if (error.response) {

@@ -5,7 +5,7 @@
       <router-link to="/allOrderslabs">All Orders</router-link>
       <router-link to="/contact" style="text-decoration: underline;">Contact</router-link>
       <router-link to="/doctorLab">Doctors</router-link>
-      <router-link to="/deliveryLabs">Delivery</router-link>
+      <router-link to="/Timing">Timing</router-link>
       <router-link to="/financeLabs">Finance</router-link>
     </div>
     <div class="dashboard">
@@ -25,39 +25,35 @@
       <div class="types">
         <div class="labels">
           <h2>Zircon</h2>
+          <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon">
           <!-- <h2>Zircon Dental Direct</h2>
           <h2>Zircon e-max prime ivoclar</h2> -->
           <h2>Impress Crown</h2>
-          <h2>Impress Intaly</h2>
-          <h2>Impress Onlay</h2>
-          <h2>Impress Overlay</h2>
-          <h2>PFM</h2>
-          <h2>Implant Zircon</h2>
-          <h2>Implant PFM</h2>
-          <h2>Night Gard</h2>
-          <h2>Night White</h2>
-          <h2>Retainer</h2>
-          <h2>Study Model</h2>
-          <h2>Snap On Smile</h2>
-        </div>
-        <div class="prices">
-          <!-- <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_wave"> -->
-          <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon">
-          <!-- <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_dental_direct"> -->
-          <!-- <input class="form-control" type="number" placeholder="Price" v-model.number="contract.zircon_emax_prime_ivoclar"> -->
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_crown">
+          <h2>Impress Intaly</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_intaly">
+          <h2>Impress Onlay</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_onlay">
+          <h2>Impress Overlay</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.impress_overlay">
+          <h2>PFM</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.pfm">
+          <h2>Implant Zircon</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.implant_zircon">
+          <h2>Implant PFM</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.implant_pfm">
+          <h2>Night Gard</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.night_gard">
+          <h2>Night White</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.night_white">
+          <h2>Retainer</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.retainer">
+          <h2>Study Model</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.study_model">
+          <h2>Snap On Smile</h2>
           <input class="form-control" type="number" placeholder="Price" v-model.number="contract.snap_on_smile">
         </div>
+        
       </div>
       <div class="submit">
         <button type="submit" class="btn btn-primary" @click="submit(pathId)">{{ button }}</button>
@@ -237,6 +233,10 @@ export default {
     transition: 0.7s ease-in-out;
 }
 
+.types{
+  display: flex;
+  justify-content: center;
+}
 
 .sidebar .activate {
     background-color: blue;

@@ -12,6 +12,10 @@
                         <label for="prov" style="font-size:larger">Final</label>
                     </div> 
                     <div>
+                        <label for="date">Date</label>
+                        <input type="date" id="date" v-model="date">
+                    </div>
+                    <div>
                         <label for="name">Patient Name : </label>
                         <input type="text" placeholder="Name" id="name" v-model="Patientname">
                         <p style="color: red;" v-text="this.errorName"></p>
@@ -149,6 +153,7 @@ export default {
             specdesc:"",
             video:null,
             file: null,
+            date: null,
         };
     },
     methods: {
@@ -208,18 +213,20 @@ export default {
             formData.append('video', this.video);
             formData.append('file', this.file);
             formData.append('prova', this.prov);
-            const formData2 = new FormData();
-            formData2.append('image', this.image);
-            formData2.append('image1', this.image1);
-            formData2.append('image2', this.image2);
-            formData2.append('video', this.video);
-            formData2.append('file', this.file);
+            formData.append('date', this.date);
+            // const formData2 = new FormData();
+            // formData2.append('image', this.image);
+            // formData2.append('image1', this.image1);
+            // formData2.append('image2', this.image2);
+            // formData2.append('video', this.video);
+            // formData2.append('file', this.file);
             axios.post('https://dentist-backend-ts43.onrender.com/doctors/orders/add', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': 'DEN ' + localStorage.getItem('token'),
                 }
             }).then((response) => {
+                console.log(this.date)
                 console.log(this.prov)
                 alert("order sent successfully");
                 console.log(formData);

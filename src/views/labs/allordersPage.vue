@@ -8,7 +8,7 @@
       >
       <!-- <router-link to="/contact">Contact</router-link> -->
       <router-link to="/doctorLab">Doctors</router-link>
-      <!-- <router-link to="/deliveryLabs">Delivery</router-link> -->
+      <router-link to="/Timing">Timing</router-link>
       <router-link to="/financeLabs">Finance</router-link>
     </div>
     <div class="content">

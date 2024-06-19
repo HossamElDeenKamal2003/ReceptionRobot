@@ -1,41 +1,51 @@
 <template>
     <div class="parent">
-        <navBar />
-        <div class="sidebar" :class="{ 'active': isActiveSidebar }">
-            <router-link to="/allOrderslabs">All Orders</router-link>
-            <router-link to="/contact">Contact</router-link>
+        <navNoAnmi />
+        <div class="sidebar" :class="{ active: isActiveSidebar }">
+            <router-link to="/allOrderslabs">All Orders <span>{{ difference }}</span></router-link>
             <router-link to="/doctorLab">Doctors</router-link>
-            <!-- <router-link to="/deliveryLabs" style="text-decoration: underline;">Delivery</router-link> -->
+            <router-link to="/Timing" style="text-decoration: underline">Timing</router-link>
             <router-link to="/financeLabs">Finance</router-link>
         </div>
         <div class="content">
             <div class="header">
+                <div class="date">
+                    <input type="date" v-model="selectedDate">
+                    <button @click="filterByDate">Fetch</button>
+                </div> 
                 <div id="search-wrapper">
                     <i class="bi bi-search search-icon"></i>
-                    <input type="text" id="search" v-model="searchTerm" @input="filterTableName" placeholder="Search">
+                    <input type="text" id="search" v-model="searchTerm" @input="filterTableName" placeholder="Search" />
                     <select name="" id="" v-model="selectedField">
                         <option value="id">id</option>
                         <option value="name">name</option>
-                        <!-- <option value="doctor">doctor</option> -->
+                        <option value="doctor">doctor</option>
                     </select>
                 </div>
             </div>
             <div class="data">
-                <table style="width:100%; margin-top:80px;">
+                <table style="width: 100%">
                     <tr class="head">
                         <th>ID</th>
                         <th>Name</th>
                         <th>From Doctor</th>
                         <th>Status</th>
-                        <th @click="deleteRow">Delete</th>
+                        <th>Date</th>
+                        <th>End Order</th>
                     </tr>
                     <tr v-for="(order, index) in filteredOrders" :key="index">
-                        <!-- <td>{{ order.id }}</td> -->
-                        <td>{{ order.letter_id }}</td>
-                        <td>{{ order.name }}</td>
-                        <td>{{ order.doctor_name }} </td>
-                        <td>{{ order.status }}</td>
-                        <td @click="deleteRow(order.id)"><i class="bi bi-trash"></i></td>
+                        <td>{{ order.UID }}</td>
+                        <td>
+                            <router-link :to="'/showorder/' + order._id">{{ order.patientName }}</router-link>
+                        </td>
+                        <td>{{ order.doc_id.username }}</td>
+                        <td class="status">{{ order.status }}</td>
+                        <td>{{ formatDate(order.date) }}</td>
+                        <td>
+                            <button @click="markOrder(order._id)" class="btn btn-primary btn-sm">
+                                <i :class="check ? 'bi bi-check' : 'bi bi-x'"></i>
+                            </button>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -44,162 +54,144 @@
 </template>
 
 <script>
-import navBar from "@/components/global/navBar.vue";
-import axios from 'axios';
+import navNoAnmi from "@/components/global/navNoAnimation.vue";
+import axios from "axios";
+
 export default {
-    name: "deliveryLab",
+    name: "allOrderslabs",
     components: {
-        navBar,
+        navNoAnmi,
     },
     data() {
         return {
             selectedField: "id",
-            ID: "",
             searchTerm: "",
-            data: {
-                name: "hossam",
-                fromDoctor: "",
-                status: "",
-                modificationDate: "",
-            },
-            orders: [
-                
-            ],
+            selectedDate: "", // Store the selected date
+            orders: [],
             filteredOrders: [],
-            filterEnd: [],
-            filterUnderWay: [],
-            filterForSearch: "",
-            searchFilter: "",
-            searchFilterType: "id",
-            fetchingData:true,
+            check: false,
+            difference: 0,
         };
     },
     methods: {
-        
-        filterTableName() {
-            if (!this.searchTerm) {
-                // If search term is empty, show all orders
-                this.filteredOrders = this.orders;
-                return;
-            }
-            const searchTermLowerCase = this.searchTerm.toLowerCase();
-            // Filter orders based on selected field
-            if (this.selectedField === "id") {
-                this.filteredOrders = this.orders.filter(order =>
-                    String(order.UID).includes(this.searchTerm)
-                );
-            } else if (this.selectedField === "name") {
-                this.filteredOrders = this.orders.filter(order =>
-                    order.patientName && order.patientName.toLowerCase().includes(searchTermLowerCase)
-                );
-            } else if (this.selectedField === "doctor") {
-                this.filteredOrders = this.orders.filter(order =>
-                    order.doctor_name && order.doctor_name.toLowerCase().includes(searchTermLowerCase)
-                );
+        fetchData() {
+            const role = localStorage.getItem('role');
+            if (role === 'LAB') {
+                axios.get('https://dentist-backend-ts43.onrender.com/labs/orders', {
+                    headers: {
+                        'Authorization': 'DEN ' + localStorage.getItem('token')
+                    }
+                }).then((response) => {
+                    this.orders = response.data.reverse();
+                    this.applyFilters();
+                }).catch((error) => {
+                    if (error.response) {
+                        switch (error.response.status) {
+                            case 400:
+                                alert(error.message, 'try signing out and signing in again');
+                                break;
+                            case 401:
+                                alert(error.response.data);
+                                break;
+                            default:
+                                alert('An error occurred: ' + error.message);
+                        }
+                    } else {
+                        alert('Check your internet connection');
+                    }
+                });
+            } else {
+                console.log('Unauthorized access: User role is not LAB');
             }
         },
-        deleteRow(orderId) {
-            if (!confirm("Are you sure you want to delete this order?")) {
-                return; // Do nothing if user cancels
+        formatDate(date) {
+            return date.split('T')[0];
+        },
+        filterByDate() {
+            this.applyFilters();
+        },
+        filterTableName() {
+            this.applyFilters();
+        },
+        applyFilters() {
+            let filtered = this.orders;
+
+            // Filter by date
+            if (this.selectedDate) {
+                filtered = filtered.filter(order => this.formatDate(order.date) === this.selectedDate);
             }
-            axios.patch(`http://localhost:8000/api/delete_order/${orderId}/`)
+
+            // Filter by search term
+            if (this.searchTerm) {
+                const searchTermLowerCase = this.searchTerm.toLowerCase();
+                if (this.selectedField === "id") {
+                    filtered = filtered.filter(order => String(order.UID).includes(this.searchTerm));
+                } else if (this.selectedField === "name") {
+                    filtered = filtered.filter(order => order.patientName && order.patientName.toLowerCase().includes(searchTermLowerCase));
+                } else if (this.selectedField === "doctor") {
+                    filtered = filtered.filter(order => order.doc_id.username && order.doc_id.username.toLowerCase().includes(searchTermLowerCase));
+                }
+            }
+
+            this.filteredOrders = filtered;
+        },
+        markOrder(orderId) {
+            axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {}, {
+                headers: {
+                    'Authorization': 'DEN ' + localStorage.getItem('token')
+                }
+            })
                 .then(response => {
-                    console.log(response);
-                    // Assuming response is successful, update your local data
-                    this.orders = this.orders.filter(order => order.id !== orderId);
-                    this.filteredOrders = this.filteredOrders.filter(order => order.id !== orderId);
-                    console.log(`Order with id ${orderId} deleted successfully.`);
+                    this.check = true;
+                    console.log('Order marked successfully:', response.data);
+                    this.fetchData();
                 })
-                .catch(error => {
-                    console.error("Error deleting order:", error);
-                    // Handle error here
+                .catch((error) => {
+                    if (error.response) {
+                        switch (error.response.status) {
+                            case 400:
+                                alert(error.message, 'try signing out and signing in again');
+                                break;
+                            case 401:
+                                alert(error.response.data);
+                                break;
+                            default:
+                                alert('An error occurred: ' + error.message);
+                        }
+                    } else {
+                        alert('Check your internet connection');
+                    }
                 });
         },
-        
-        fetchData() {
-            if(this.fetchingData){
-                let ApiUrl;
-                if (this.filterForSearch == "") {
-                    ApiUrl = 'http://127.0.0.1:8000/api/laboratory/all_orders/'
-                }
-                // else {
-                //     ApiUrl = 'http://127.0.0.1:8000/api/laboratory/all_orders/?status=' + this.filterForSearch
-                // }
-                axios.get(ApiUrl).then(response => {
-                    this.orders = response.data;
-                    this.filteredOrders = this.orders;
-                    this.filteredOrders.reverse();
-                })
-                    .catch(error => {
-                        console.error("Error fetching data:", error);
-                    });
-            }
+        filterAll() {
+            this.filteredOrders = this.orders;
         },
-    },
-    watch: {
-        searchTerm(newSearchTerm) {
-            // Stop data fetching if search term is not empty
-            if (newSearchTerm.trim() !== '') {
-                this.fetchingData = false;
-            } else {
-                // Resume data fetching if search term is empty
-                this.fetchingData = true;
-                this.fetchData();
-                setInterval(() => {
-                    this.fetchData();
-                }, 2000);
-            }
-        },
-    },
-    computed: {
-        isUsernameEmptyOrNull() {
-        const username = localStorage.getItem('username');
-        return username === '' || username === null;
-        }
     },
     mounted() {
         const username = localStorage.getItem('username');
-        if (username !== '' && username !== null) { // Check if username is not empty and not null
+        if (username !== '' && username !== null) {
             this.fetchData();
             setInterval(() => {
                 this.fetchData();
-            }, 2000);
+            }, 300000);
         }
     },
     created() {
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+        this.filterAll();
     },
-    // Other component options...
-    // watch: {
-    //     orders: {
-    //         handler() {
-    //             axios.get('http://127.0.0.1:8000/api/laboratory/all_orders/')
-    //                 .then(response => {
-    //                     this.order_id = response.data.id;
-    //                 }).catch(error => {
-    //                     console.log(error);
-    //                 });
-    //             // Find the order with the specific ID
-    //             const orderToUpdate = this.orders.find(order => order.id === this.order_id);
-    //             if (orderToUpdate) {
-    //                 axios.post(`http://localhost:8000/api/edit_order/${this.order_id}/`, {
-    //                     been_payed: orderToUpdate.beenPaid,
-    //                     not_payed: orderToUpdate.residual
-    //                 }).then(response => {
-    //                     console.log(response);
-    //                 }).catch(error => {
-    //                     console.error(error);
-    //                 });
-    //             }
-    //         },
-    //         deep: true
-    //     }
-    // },
-
-}
+};
 </script>
 
 <style scoped>
+.green-row {
+    background-color: lightgreen;
+}
+
+.date{
+    display: flex;
+    justify-content: space-around;
+}
+
 .sidebar {
     margin: 0;
     padding: 0;
@@ -211,6 +203,10 @@ export default {
     transition: 0.5s;
 }
 
+.status {
+    color: #33a1f1;
+}
+
 .sidebar a {
     display: block;
     color: white;
@@ -218,7 +214,6 @@ export default {
     text-decoration: none;
     transition: 0.7s ease-in-out;
 }
-
 
 .sidebar .activate {
     background-color: blue;
@@ -231,7 +226,10 @@ export default {
     align-items: center;
     flex-wrap: wrap;
     gap: 10%;
-    position: relative;
+}
+
+input {
+    text-align: center;
 }
 
 .header button {
@@ -256,6 +254,16 @@ export default {
     margin-top: 15px;
 }
 
+ul {
+    list-style: none;
+    font-size: 1.5em;
+}
+
+li {
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+}
 
 td {
     font-style: bold;
@@ -278,12 +286,11 @@ td {
     background-color: #fff;
     overflow: hidden;
     max-width: 400px;
-    margin-top: 50px;
-    position: absolute;
-    right: 10px;
-    top: -30px;
 }
 
+ul li button {
+    border: none;
+}
 
 #search {
     border: none;
@@ -306,14 +313,13 @@ td {
     color: #fff;
     background-color: black;
     padding: 0px 10px;
-    transition: .7s ease-in-out;
+    transition: 0.7s ease-in-out;
 }
 
 #search-button:hover {
     background-color: white;
     color: #33a1f1;
 }
-
 
 .data {
     display: flex;
@@ -323,7 +329,6 @@ td {
 
 table {
     height: fit-content;
-    margin-top: 70px;
 }
 
 table tr {
@@ -342,6 +347,18 @@ td i {
 
 td i:hover {
     color: red;
+}
+
+td input {
+    outline: #33a1f1;
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    border-bottom: 2px solid black;
+}
+
+input:focus {
+    border-bottom: blue;
 }
 
 table button {
@@ -373,5 +390,32 @@ div.content {
 
 table {
     margin-top: 15px;
+}
+
+.update:focus {
+    color: black;
+}
+
+
+
+@media only screen and (max-width: 840px) {
+    .sidebar {
+        margin-top: 80px;
+    }
+
+    table {
+        margin-right: 100px;
+        margin-right: -180px;
+    }
+}
+
+@media only screen and (max-width: 426px) {
+    .sidebar {
+        margin-top: 0;
+    }
+
+    table {
+        margin-right: -680px;
+    }
 }
 </style>
