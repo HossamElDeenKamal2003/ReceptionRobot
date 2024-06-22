@@ -7,103 +7,45 @@
         <div class="form-control signup-form">
           <form action="#">
             <h2 style="margin-top: 280px">Signup</h2>
-            <input
-              type="text"
-              placeholder="Username"
-              v-model="signUp.usernameSign"
-              name="usernamesign"
-              required
-            />
+            <input type="text" placeholder="Username" v-model="signUp.usernameSign" name="usernamesign" required />
             <span v-if="usernameError !== ''" style="color: red">{{
               usernameError
             }}</span>
-            <input
-              type="text"
-              placeholder="phoneNumber"
-              v-model="signUp.phoneNumber"
-            />
+            <input type="text" placeholder="phoneNumber" v-model="signUp.phoneNumber" />
             <span v-if="usernameError !== ''" style="color: red">{{
               phoneNumberError
             }}</span>
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              v-model="signUp.Email"
-            />
+            <input type="email" placeholder="Email" required v-model="signUp.Email" />
             <span v-if="usernameError !== ''" style="color: red">{{
               EmailError
             }}</span>
-            <input
-              type="Number Of bulding"
-              placeholder="Number Of bulding"
-              required
-              v-model="signUp.numerofbuilding"
-            />
+            <input type="Number Of bulding" placeholder="Number Of bulding" required v-model="signUp.numerofbuilding" />
             <span v-if="usernameError !== ''" style="color: red">{{
               numerofbuildingError
             }}</span>
-            <input
-              type="Number Of Floor"
-              placeholder="Number Of Floor"
-              required
-              v-model="signUp.numberofroof"
-            />
+            <input type="Number Of Floor" placeholder="Number Of Floor" required v-model="signUp.numberofroof" />
             <span v-if="usernameError !== ''" style="color: red">{{
               numberofroofError
             }}</span>
-            <input
-              type="text"
-              placeholder="Address"
-              required
-              v-model="address"
-            />
+            <input type="text" placeholder="Address" required v-model="address" />
             <span v-if="usernameError !== ''" style="color: red">{{
               addressError
             }}</span>
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              v-model="signUp.passwordSign"
-            />
+            <input type="password" placeholder="Password" required v-model="signUp.passwordSign" />
             <span v-if="usernameError !== ''" style="color: red">{{
               passwordError
             }}</span>
-            <input
-              type="password"
-              placeholder="Confirm password"
-              required
-              v-model="signUp.reaptedPassword"
-            />
+            <input type="password" placeholder="Confirm password" required v-model="signUp.reaptedPassword" />
             <p v-if="latitude && longitude">
               Latitude: {{ latitude }}<br />
               Longitude: {{ longitude }}
             </p>
             <div>
-              <input
-                type="radio"
-                id="doctor"
-                name="role"
-                value="DOC"
-                v-model="signUp.role"
-              />
+              <input type="radio" id="doctor" name="role" value="DOC" v-model="signUp.role" />
               <label for="doctor">Doctor</label>
-              <input
-                type="radio"
-                id="laboratory"
-                name="role"
-                value="LAB"
-                v-model="signUp.role"
-              />
+              <input type="radio" id="laboratory" name="role" value="LAB" v-model="signUp.role" />
               <label for="laboratory">Laboratory</label>
-              <input
-                type="radio"
-                id="normal"
-                name="role"
-                value="NOM"
-                v-model="signUp.role"
-              />
+              <input type="radio" id="normal" name="role" value="NOM" v-model="signUp.role" />
               <label for="normal">Normal</label>
             </div>
             <button @click="getCurrentLocationAndSubmit">Signup</button>
@@ -112,19 +54,12 @@
         <div class="form-control signin-form">
           <form action="#">
             <h2>Signin</h2>
-            <input
-              type="text"
-              placeholder="Username"
-              required
-              name="usernamelog"
-              v-model="this.login.usernameLog"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              v-model="this.login.passwordLog"
-            />
+            <input type="text" placeholder="Username" required name="usernamelog" v-model="this.login.usernameLog" />
+            <input :type="showPassword ? 'text' : 'password'" placeholder="Password" required
+              v-model="this.login.passwordLog" />
+            <button type="button" @click="togglePasswordVisibility">
+              {{ showPassword ? 'Hide' : 'Show' }} Password
+            </button>
             <button @click="Login">Signin</button>
           </form>
         </div>
@@ -418,130 +353,134 @@ import navBar from "@/components/global/navBar.vue";
 import axios from 'axios';
 
 export default {
-    name: "logIn",
-    components: {
-        navBar,
-    },
+  name: "logIn",
+  components: {
+    navBar,
+  },
 
-    data() {
-        return {
-            isFlipped: false,
-            address: '',
-            signUpError:'',
-            usernameError:'',
-            passwordError:'',
-            phoneNumberError:'',
-            EmailError:'',
-            numerofbuildingError:'',
-            numberofroofError:'',
-            addressError:'',
-            signUp: {
-                usernameSign: '',
-                passwordSign: '',
-                repeatedPassword: '',
-                phoneNumber: '',
-                numerofbuilding: '',
-                numberofroof: '',
-                Email: "",
-                location: "",
-                role: "",
-            },
-            login: {
-                usernameLog: '',
-                passwordLog: '',
-            },
-        };
+  data() {
+    return {
+      showPassword: false,
+      isFlipped: false,
+      address: '',
+      signUpError: '',
+      usernameError: '',
+      passwordError: '',
+      phoneNumberError: '',
+      EmailError: '',
+      numerofbuildingError: '',
+      numberofroofError: '',
+      addressError: '',
+      signUp: {
+        usernameSign: '',
+        passwordSign: '',
+        repeatedPassword: '',
+        phoneNumber: '',
+        numerofbuilding: '',
+        numberofroof: '',
+        Email: "",
+        location: "",
+        role: "",
+      },
+      login: {
+        usernameLog: '',
+        passwordLog: '',
+      },
+    };
+  },
+  methods: {
+    flipForms() {
+      this.isFlipped = !this.isFlipped;
     },
-    methods: {
-        flipForms() {
-            this.isFlipped = !this.isFlipped;
-        },
-        getCurrentLocationAndSubmit(event) {
-            event.preventDefault();
-                let createUser_API = 'https://dentist-backend-ts43.onrender.com/users/signup';
-                axios.post(createUser_API, {
-                        "username": this.signUp.usernameSign,
-                        "phone":this.signUp.phoneNumber,
-                        "buildNo":this.signUp.numerofbuilding,
-                        "floorNo":this.signUp.numberofroof,
-                        "address":this.address,
-                        "password": this.signUp.passwordSign,
-                        "email": this.signUp.Email,
-                        "role":this.signUp.role
-                }).then((response) => {
-                      localStorage.setItem('token', response.data.token);
-                      localStorage.setItem('username', response.data.user.username);
-                      localStorage.setItem('id', response.data.user.UID);
-                      localStorage.setItem('contract', response.data.labContract)
-                      this.$router.push('/');
-                    }).catch((error) => {
-                if (error.response) {
-                    // Handle errors based on response status code
-                    switch (error.response.status) {
-                        case 400:
-                            alert(error.message, 'try signing out and signing in again');
-                            break;
-                        case 401:
-                            alert(error.response.data);
-                            break;
-                        case 500:
-                          alert("Please Enter All Data");
-                          break;
-                        default:
-                            alert('An error occurred: ' + error.message);
-                    }
-                } else {
-                    // Handle network errors or errors without a response
-                    alert('Check your internet connection');
-                }
-            });
-        },
-        Login(e) {
-            e.preventDefault();
-            axios.post('https://dentist-backend-ts43.onrender.com/users/login', {
-                username: this.login.usernameLog,
-                password: this.login.passwordLog,
-            }).then(response => {
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('username', response.data.user.username);
-                localStorage.setItem('id', response.data.user._id);
-                localStorage.setItem('UID', response.data.user.UID);
-                localStorage.setItem('delSub', response.data.user.publicDelivery)
-                localStorage.setItem('role', response.data.user.role);
-                localStorage.setItem('contract', JSON.stringify(response.data.user.labContract));
-                //console.log(response.data.user.role);
-                this.$router.push('/');
-            }).catch((error) => {
-                if (error.response) {
-                    // Handle errors based on response status code
-                    switch (error.response.status) {
-                        case 400:
-                            alert(error.message, 'try signing out and signing in again');
-                            break;
-                        case 401:
-                            alert(error.response.data);
-                            break;
-                        case 404:
-                          alert("User not found");
-                          break;
-                        default:
-                            alert('An error occurred: ' + error.message);
-                    }
-                } else {
-                    alert('Check your internet connection');
-                }
-            });
-        },
+    togglePasswordVisibility() {
+        this.showPassword = !this.showPassword;
     },
-    watch:{
-      signUpError(){
-        if(this.signUp.passwordSign.length < 6){
-          this.signUpError = "Password must be at least 6 characters";
+    getCurrentLocationAndSubmit(event) {
+      event.preventDefault();
+      let createUser_API = 'https://dentist-backend-ts43.onrender.com/users/signup';
+      axios.post(createUser_API, {
+        "username": this.signUp.usernameSign,
+        "phone": this.signUp.phoneNumber,
+        "buildNo": this.signUp.numerofbuilding,
+        "floorNo": this.signUp.numberofroof,
+        "address": this.address,
+        "password": this.signUp.passwordSign,
+        "email": this.signUp.Email,
+        "role": this.signUp.role
+      }).then((response) => {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('username', response.data.user.username);
+        localStorage.setItem('id', response.data.user.UID);
+        localStorage.setItem('contract', response.data.labContract)
+        this.$router.push('/');
+      }).catch((error) => {
+        if (error.response) {
+          // Handle errors based on response status code
+          switch (error.response.status) {
+            case 400:
+              alert(error.response);
+              break;
+            case 401:
+              alert(error.response.data);
+              break;
+            case 500:
+              alert("Please Enter All Data");
+              break;
+            default:
+              alert('An error occurred: ' + error.message);
+          }
+        } else {
+          // Handle network errors or errors without a response
+          alert('Check your internet connection');
         }
-        if(this.signUp.passwordSign !== this.signUp.repeatedPassword){
-          this.signUpError + ", two passwords field must be the same";
+      });
+    },
+    Login(e) {
+      e.preventDefault();
+      axios.post('https://dentist-backend-ts43.onrender.com/users/login', {
+        username: this.login.usernameLog,
+        password: this.login.passwordLog,
+      }).then(response => {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('username', response.data.user.username);
+        localStorage.setItem('id', response.data.user._id);
+        localStorage.setItem('UID', response.data.user.UID);
+        localStorage.setItem('delSub', response.data.user.publicDelivery)
+        localStorage.setItem('role', response.data.user.role);
+        localStorage.setItem('contract', JSON.stringify(response.data.user.labContract));
+        //console.log(response.data.user.role);
+        this.$router.push('/');
+      }).catch((error) => {
+        if (error.response) {
+          // Handle errors based on response status code
+          switch (error.response.status) {
+            case 400:
+              alert(error.message, 'try signing out and signing in again');
+              break;
+            case 401:
+              alert(error.response.data);
+              break;
+            case 404:
+              alert("User not found");
+              break;
+            default:
+              alert('An error occurred: ' + error.message);
+          }
+        } else {
+          alert('Check your internet connection');
         }
+      });
+    },
+  },
+  watch: {
+    signUpError() {
+      if (this.signUp.passwordSign.length < 6) {
+        this.signUpError = "Password must be at least 6 characters";
+      }
+      if (this.signUp.passwordSign !== this.signUp.repeatedPassword) {
+        this.signUpError + ", two passwords field must be the same";
       }
     }
+  }
 };
 </script>
