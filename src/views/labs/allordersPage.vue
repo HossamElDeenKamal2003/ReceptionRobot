@@ -46,6 +46,15 @@
           </select>
         </div>
       </div>
+      <div>
+        <!-- <audio controls ref="audio">
+          <source src="" type="audio/ogg">
+          <source src="../../assets/001.mp3" type="audio/mpeg">
+          Your browser does not support the audio tag.
+        </audio> -->
+          <audio ref="audio" :src="require('@/assets/ring.wav')"></audio>
+        <!-- <button @click="ring">click</button> -->
+      </div>
       <div class="subscribe">
         <button @click="manage_sub()" class="btn btn-primary">
           {{ message_sub }}
@@ -140,6 +149,11 @@ export default {
   },
 
   methods:{
+  ring(){
+    this.$refs.audio.play().catch(err=>{
+      console.log(err);
+    })
+  },
   fetchData() {
     const role = localStorage.getItem('role');
     if(this.flag === true){
@@ -150,7 +164,10 @@ export default {
         }
       }).then((response) => {
         this.orders = response.data.reverse();
-        this.filteredOrders = this.orders;
+        if(this.orders.length > this.filteredOrders.length){
+          this.ring();
+          this.filteredOrders = this.orders;
+        }
         // this.filteredOrders.reverse();
       }).catch((error) => {
                 if (error.response) {
@@ -359,7 +376,7 @@ markOrder(orderId) {
       this.fetchData();
       setInterval(() => {
         this.fetchData();
-      }, 300000);
+      }, 60000);
     }
   },
   created(){
