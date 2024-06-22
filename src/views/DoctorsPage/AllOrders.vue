@@ -111,10 +111,10 @@ export default {
             this.filteredOrders = this.orders.filter(order => order.status === "UNDERWAY(P)" || order.status === "UNDERWAY(F)");
         },
         filterend() {
-            this.filteredOrders = this.orders.filter(order => order.status === "End(P)" || order.status === "End(F)");
+            this.filteredOrders = this.orders.filter(order => order.status === "END(P)" || order.status === "END(F)");
         },
         filterReady() {
-            this.filteredOrders = this.orders.filter(order => order.status === "DocReady(P)" || order.status === "LabReady(F)");
+            this.filteredOrders = this.orders.filter(order => order.status === "DocReady(P)" || order.status === "LabReady(F)" || order.status === 'DocReady(F)' || order.status === 'LabReady(P)');
         },
 
         fetchData() {

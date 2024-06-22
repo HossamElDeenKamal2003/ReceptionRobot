@@ -368,7 +368,7 @@ ul li button {
 
 table {
     height: fit-content;
-    margin-right: 20px;
+    margin-left: 20px;
 }
 
 table tr {

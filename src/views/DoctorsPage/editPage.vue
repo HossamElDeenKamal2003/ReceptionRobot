@@ -267,7 +267,7 @@ export default {
                             alert(error.message, 'try signing out and signing in again');
                             break;
                         case 401:
-                            alert(error.response.data);
+                            alert("Order status is not END(P). Cannot mark as 'Call Delivery'.");
                             break;
                         default:
                             alert('An error occurred: ' + error.message);
@@ -290,7 +290,6 @@ export default {
                 'Authorization': 'DEN ' + localStorage.getItem('token')
             }
         }).then(response => {
-            console.log(response.data);
             this.Patientname = response.data.patientName;
             this.Age = response.data.age;
             this.numberofteeth = response.data.teethNo;

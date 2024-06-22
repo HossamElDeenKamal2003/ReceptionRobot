@@ -8,7 +8,7 @@
                 <form action="">
                     <div class="basic-info">
                         <div>
-                            <p>{{date}}</p>
+                            <p>{{ date }}</p>
                             <div>
                                 <label for="date">Date</label>
                                 <input type="date" id="date" v-model="date">
@@ -20,7 +20,7 @@
                             <p style="color: red;" v-text="this.errorName"></p>
                         </div>
                         <div>
-                            <label for="Age">Age : </label> 
+                            <label for="Age">Age : </label>
                             <input type="text" placeholder="Age" id="Age" v-model="Age">
                         </div>
                         <div>
@@ -89,12 +89,15 @@
                         <label for="req">Requirments</label>
                         <textarea name="" id="" style="overflow:auto; width:100%; height: 25%"
                             v-model="note"></textarea>
-                        <a :href="file" :style="{ display: file === null ? 'none' : 'inline' }">Screen File</a>
+                        <!-- <a :href="file" :style="{ display: file === null ? 'none' : 'inline' }">Screen File</a> -->
                         <div class="container">
                             <div class="display">
                                 <p>{{ message }}</p>
                             </div>
                         </div>
+                    </div>
+                    <div>
+                        <a v-if="file !== null" :href="file">Screen File</a>
                     </div>
                     <div class="slider" style="height:50vh; width:100%; display:flex; justify-contnet:center;">
                         <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false"
@@ -181,6 +184,7 @@ export default {
             video: null,
             file: null,
             date: "",
+            Uid: "",
             // toothColors: ["A1", "A2", "A3", "A3.5", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D2", "D3", "D4", "BL1", "BL2", "BL3", "BL4"],
         };
     },
@@ -267,6 +271,7 @@ export default {
         },
     },
     created() {
+        this.Uid = this.$route.params.id;
         const orderId = this.$route.params.id;
         axios.get(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {
             headers: {
@@ -286,6 +291,7 @@ export default {
             this.image2 = response.data.image2;
             this.video = response.data.video;
             this.date = response.data.date;
+            this.file = response.data.file;
             console.log(this.image)
         }).catch((error) => {
             if (error.response) {
