@@ -177,6 +177,9 @@ export default {
                 case 401:
                   alert(error.response.data);
                   break;
+                case 404:
+                  console.log("No Data");
+                  break;
                 default:
                   alert('An error occurred: ' + error.message);
               }
@@ -390,8 +393,29 @@ export default {
     }).then(response => {
       this.orders = response.data.reverse();
       this.filteredOrders = this.orders;
-    })
+    }).catch((error) => {
+          if (error.response) {
+            // Handle errors based on response status code
+            switch (error.response.status) {
+              case 400:
+                alert(error.message, 'try signing out and signing in again');
+                break;
+              case 401:
+                alert(error.response.data);
+                break;
+              case 404:
+                console.log("no data");
+                break;
+              default:
+                alert('An error occurred: ' + error.message);
+            }
+          } else {
+            // Handle network errors or errors without a response
+            console.log(error);
+          }
+        });
   },
+
 };
 </script>
 
