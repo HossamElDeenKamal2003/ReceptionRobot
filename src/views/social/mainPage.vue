@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navBar />
+        <navBar :shouldPauseRing="true" />
         <div class="image-container">
             <img src="@/assets/firstImage.jpg" alt="" width="100%">
             <div class="loading-overlay">
@@ -61,5 +61,13 @@ export default {
     components: {
         navBar,
     },
+    props: {
+        shouldPauseRing: Boolean
+    },
+    created() {
+        if (this.shouldPauseRing) {
+            this.$emit('pause-ring');
+        }
+    }
 };
 </script>

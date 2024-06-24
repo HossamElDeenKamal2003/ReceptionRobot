@@ -3,9 +3,8 @@
     <navNoAnmi />
     <!-- <audio ref="ringSound" src="@/assets/ring.mp3" preload="auto"></audio> -->
     <div class="sidebar" :class="{ active: isActiveSidebar }">
-      <router-link to="/allOrderslabs" style="text-decoration: underline"
-        >All Orders <span>{{ diffrence }}</span> </router-link
-      >
+      <router-link to="/allOrderslabs" style="text-decoration: underline">All Orders <span>{{ diffrence }}</span>
+      </router-link>
       <!-- <router-link to="/contact">Contact</router-link> -->
       <router-link to="/doctorLab">Doctors</router-link>
       <router-link to="/Timing">Timing</router-link>
@@ -26,19 +25,16 @@
           <li tabindex="0">
             <button :disabled="isUsernameEmptyOrNull" class="filter" @click="filterReady">Ready</button>
           </li>
+          <li>
+            <button @click="pauseRing" class="btn btn-sm">pause</button>
+          </li>
           <li tabindex="0">
             <!-- <button :disabled="isUsernameEmptyOrNull" v-for="(order, index) in filteredOrders" :key="index" class="filter" @click="clickUpdate(order)">Update</button> -->
           </li>
         </ul>
         <div id="search-wrapper">
           <i class="bi bi-search search-icon"></i>
-          <input
-            type="text"
-            id="search"
-            v-model="searchTerm"
-            @input="filterTableName"
-            placeholder="Search"
-          />
+          <input type="text" id="search" v-model="searchTerm" @input="filterTableName" placeholder="Search" />
           <select name="" id="" v-model="selectedField">
             <option value="id">id</option>
             <option value="name">name</option>
@@ -52,7 +48,7 @@
           <source src="../../assets/001.mp3" type="audio/mpeg">
           Your browser does not support the audio tag.
         </audio> -->
-          <audio ref="audio" :src="require('@/assets/ring.wav')"></audio>
+        <audio ref="audio" :src="require('../../assets/ring.wav')" loop></audio>
         <!-- <button @click="ring">click</button> -->
       </div>
       <div class="subscribe">
@@ -74,7 +70,7 @@
             <th>End Order</th>
           </tr>
           <!-- <tr v-for="(order, index) in filteredOrders" :key="index" :style="{ border: check ? '2px solid green' : '' }> -->
-            <tr v-for="(order, index) in filteredOrders" :key="index">
+          <tr v-for="(order, index) in filteredOrders" :key="index">
             <td>{{ order.UID }}</td>
             <td>
               <router-link :to="'/showorder/' + order._id">{{ order.patientName }}</router-link>
@@ -117,7 +113,7 @@ export default {
       selectedField: "id",
       ID: "",
       message_sub: "",
-      toogle:false,
+      toogle: false,
       searchTerm: "",
       //end_order: <i class="bi bi-x"></i>,
       end_order: false,
@@ -129,7 +125,7 @@ export default {
         modificationDate: "",
       },
       orders: [
-        
+
       ],
       filteredOrders: [],
       filterEnd: [],
@@ -138,67 +134,107 @@ export default {
       searchFilter: "",
       searchFilterType: "id",
       order_id: "",
-      check:false,
+      check: false,
       numberoforder: 0,
       new_number: 0,
       difference: 0,
-      firstLength:0,
-      secondLength:0,
-      flag:true,
+      firstLength: 0,
+      secondLength: 0,
+      flag: true,
     };
   },
 
-  methods:{
-  ring(){
-    this.$refs.audio.play().catch(err=>{
-      console.log(err);
-    })
-  },
-  fetchData() {
-    const role = localStorage.getItem('role');
-    if(this.flag === true){
+  methods: {
+    ring() {
+      this.$refs.audio.play().catch(err => {
+        console.log(err);
+      })
+    },
+    fetchData() {
+      const role = localStorage.getItem('role');
+      if (this.flag === true) {
+        if (role === 'LAB') {
+          axios.get('https://dentist-backend-ts43.onrender.com/labs/orders', {
+            headers: {
+              'Authorization': 'DEN ' + localStorage.getItem('token')
+            }
+          }).then((response) => {
+            this.orders = response.data.reverse();
+            if (this.orders.length > this.filteredOrders.length) {
+              this.$refs.audio.play().catch(err => {
+                console.log(err);
+              })
+              this.filteredOrders = this.orders;
+            }
+            // this.filteredOrders.reverse();
+          }).catch((error) => {
+            if (error.response) {
+              // Handle errors based on response status code
+              switch (error.response.status) {
+                case 400:
+                  alert(error.message, 'try signing out and signing in again');
+                  break;
+                case 401:
+                  alert(error.response.data);
+                  break;
+                default:
+                  alert('An error occurred: ' + error.message);
+              }
+            } else {
+              console.log(error);
+              // Handle network errors or errors without a response
+            }
+          });
+        } else {
+          console.log('Unauthorized access: User role is not LAB');
+        }
+      }
+    },
+    pauseRing() {
+            if (this.$refs.audio) {
+                this.$refs.audio.pause();
+            }
+        },
+    check_order(ID) {
+      const role = localStorage.getItem('role');
       if (role === 'LAB') {
-      axios.get('https://dentist-backend-ts43.onrender.com/labs/orders', {
-        headers: {
-          'Authorization': 'DEN ' + localStorage.getItem('token')
-        }
-      }).then((response) => {
-        this.orders = response.data.reverse();
-        if(this.orders.length > this.filteredOrders.length){
-          this.ring();
-          this.filteredOrders = this.orders;
-        }
-        // this.filteredOrders.reverse();
-      }).catch((error) => {
-                if (error.response) {
-                    // Handle errors based on response status code
-                    switch (error.response.status) {
-                        case 400:
-                            alert(error.message, 'try signing out and signing in again');
-                            break;
-                        case 401:
-                            alert(error.response.data);
-                            break;
-                        default:
-                            alert('An error occurred: ' + error.message);
-                    }
-                } else {
-                    // Handle network errors or errors without a response
-                    alert('Check your internet connection');
-                }
-            });
-    } else {
-      console.log('Unauthorized access: User role is not LAB');
-    }
-    }
-    
-  },
-  check_order(ID) {
-    const role = localStorage.getItem('role');
-    if (role === 'LAB') {
-      const isUnderway = this.filteredOrders.find(order => order.UID === ID).status === 'Underway';
-      axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/${ID}`, {
-        status: isUnderway ? 'Ready' : 'Underway'
+        const isUnderway = this.filteredOrders.find(order => order.UID === ID).status === 'Underway';
+        axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/${ID}`, {
+          status: isUnderway ? 'Ready' : 'Underway'
+        }, {
+          headers: {
+            'Authorization': 'DEN ' + localStorage.getItem('token')
+          }
+        }).then(response => {
+          console.log(response.data);
+          this.fetchData();
+        }).catch((error) => {
+          if (error.response) {
+            // Handle errors based on response status code
+            switch (error.response.status) {
+              case 400:
+                alert(error.message, 'try signing out and signing in again');
+                break;
+              case 401:
+                alert(error.response.data);
+                break;
+              default:
+                alert('An error occurred: ' + error.message);
+            }
+          } else {
+            // Handle network errors or errors without a response
+            alert('Check your internet connection');
+          }
+        });
+      } else {
+        console.log('Unauthorized access: User role is not LAB');
+      }
+    },
+
+    update(id) {
+      axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/paid/${id}`, {
+        paid: this.filteredOrders.find(order => order._id === id).paid,
+        price: this.filteredOrders.find(order => order._id).price
       }, {
         headers: {
           'Authorization': 'DEN ' + localStorage.getItem('token')
@@ -207,190 +243,163 @@ export default {
         console.log(response.data);
         this.fetchData();
       }).catch((error) => {
-                if (error.response) {
-                    // Handle errors based on response status code
-                    switch (error.response.status) {
-                        case 400:
-                            alert(error.message, 'try signing out and signing in again');
-                            break;
-                        case 401:
-                            alert(error.response.data);
-                            break;
-                        default:
-                            alert('An error occurred: ' + error.message);
-                    }
-                } else {
-                    // Handle network errors or errors without a response
-                    alert('Check your internet connection');
-                }
-            });
-    } else {
-      console.log('Unauthorized access: User role is not LAB');
-    }
-  },
-  
-  update(id) {
-  axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/paid/${id}`, {
-    paid: this.filteredOrders.find(order => order._id === id).paid,
-    price:this.filteredOrders.find(order => order._id).price
-  }, {
-    headers: {
-      'Authorization': 'DEN ' + localStorage.getItem('token')
-    }
-  }).then(response => {
-    console.log(response.data);
-    this.fetchData();
-  }).catch((error) => {
-                if (error.response) {
-                    // Handle errors based on response status code
-                    switch (error.response.status) {
-                        case 400:
-                            alert(error.message, 'try signing out and signing in again');
-                            break;
-                        case 401:
-                            alert(error.response.data);
-                            break;
-                        default:
-                            alert('An error occurred: ' + error.message);
-                    }
-                } else {
-                    // Handle network errors or errors without a response
-                    alert('Check your internet connection');
-                }
-            });
-},
-markOrder(orderId) {
-  axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {}, {
-    headers: {
-      'Authorization': 'DEN ' + localStorage.getItem('token')
-    }
-  })
-  .then(response => {
-    this.end_order = true; 
-    console.log('Order marked successfully:', response.data);
-    this.fetchData();
-  })
-  .catch((error) => {
-                if (error.response) {
-                    // Handle errors based on response status code
-                    switch (error.response.status) {
-                        case 400:
-                            alert(error.message, 'try signing out and signing in again');
-                            break;
-                        case 401:
-                            alert(error.response.data);
-                            break;
-                        default:
-                            alert('An error occurred: ' + error.message);
-                    }
-                } else {
-                    // Handle network errors or errors without a response
-                    alert('Check your internet connection');
-                }
-            });
-  },
+        if (error.response) {
+          // Handle errors based on response status code
+          switch (error.response.status) {
+            case 400:
+              alert(error.message, 'try signing out and signing in again');
+              break;
+            case 401:
+              alert(error.response.data);
+              break;
+            default:
+              alert('An error occurred: ' + error.message);
+          }
+        } else {
+          // Handle network errors or errors without a response
+          alert('Check your internet connection');
+        }
+      });
+    },
+    markOrder(orderId) {
+      axios.patch(`https://dentist-backend-ts43.onrender.com/labs/orders/${orderId}`, {}, {
+        headers: {
+          'Authorization': 'DEN ' + localStorage.getItem('token')
+        }
+      })
+        .then(response => {
+          this.end_order = true;
+          console.log('Order marked successfully:', response.data);
+          this.fetchData();
+        })
+        .catch((error) => {
+          if (error.response) {
+            // Handle errors based on response status code
+            switch (error.response.status) {
+              case 400:
+                alert(error.message, 'try signing out and signing in again');
+                break;
+              case 401:
+                alert(error.response.data);
+                break;
+              default:
+                alert('An error occurred: ' + error.message);
+            }
+          } else {
+            // Handle network errors or errors without a response
+            alert('Check your internet connection');
+          }
+        });
+    },
 
-  manage_sub() {
-  const isSubscribed = localStorage.getItem('delSub') === 'true';
-  const role = localStorage.getItem('role');
-  if (role === 'LAB') {
-    axios.patch('https://dentist-backend-ts43.onrender.com/labs/public', {
-      publicDelivery: !isSubscribed,
-    }, {
-      headers: {
-        'Authorization': 'DEN ' + localStorage.getItem('token')
-      }
-    }).then(() => {
-      if (!isSubscribed) {
-        this.message_sub = "Unsubscribe from Delivery";
-        localStorage.setItem('delSub', 'true');
+    manage_sub() {
+      const isSubscribed = localStorage.getItem('delSub') === 'true';
+      const role = localStorage.getItem('role');
+      if (role === 'LAB') {
+        axios.patch('https://dentist-backend-ts43.onrender.com/labs/public', {
+          publicDelivery: !isSubscribed,
+        }, {
+          headers: {
+            'Authorization': 'DEN ' + localStorage.getItem('token')
+          }
+        }).then(() => {
+          if (!isSubscribed) {
+            this.message_sub = "Unsubscribe from Delivery";
+            localStorage.setItem('delSub', 'true');
+          } else {
+            this.message_sub = "Subscribe in Delivery";
+            localStorage.setItem('delSub', 'false');
+          }
+          //console.log(response.data);
+        }).catch((error) => {
+          if (error.response) {
+            // Handle errors based on response status code
+            switch (error.response.status) {
+              case 400:
+                alert(error.message, 'try signing out and signing in again');
+                break;
+              case 401:
+                alert(error.response.data);
+                break;
+              default:
+                alert('An error occurred: ' + error.message);
+            }
+          } else {
+            // Handle network errors or errors without a response
+            alert('Check your internet connection');
+          }
+        });
       } else {
-        this.message_sub = "Subscribe in Delivery";
-        localStorage.setItem('delSub', 'false');
+        console.log('Unauthorized access: User role is not LAB');
       }
-      //console.log(response.data);
-    }).catch((error) => {
-                if (error.response) {
-                    // Handle errors based on response status code
-                    switch (error.response.status) {
-                        case 400:
-                            alert(error.message, 'try signing out and signing in again');
-                            break;
-                        case 401:
-                            alert(error.response.data);
-                            break;
-                        default:
-                            alert('An error occurred: ' + error.message);
-                    }
-                } else {
-                    // Handle network errors or errors without a response
-                    alert('Check your internet connection');
-                }
-            });
-  } else {
-    console.log('Unauthorized access: User role is not LAB');
-  }
+    },
+    filterTableName() {
+      if (!this.searchTerm) {
+        // If search term is empty, show all orders
+        this.filteredOrders = this.orders;
+        return;
+      }
+      const searchTermLowerCase = this.searchTerm.toLowerCase();
+      if (this.selectedField === "id") {
+        this.filteredOrders = this.orders.filter(order =>
+          String(order.UID).includes(this.searchTerm)
+        );
+      } else if (this.selectedField === "name") {
+        this.filteredOrders = this.orders.filter(order =>
+          order.patientName && order.patientName.toLowerCase().includes(searchTermLowerCase)
+        );
+      } else if (this.selectedField === "doctor") {
+        this.filteredOrders = this.orders.filter(order =>
+          order.doc_id.username && order.doc_id.username.toLowerCase().includes(searchTermLowerCase)
+        );
+      }
+    },
+    filterAll() {
+      this.flag = true,
+        this.filteredOrders = this.orders;
+    },
+    filterunderway() {
+      this.flag = false;
+      this.filteredOrders = this.orders.filter(order => order.status === "UNDERWAY(P)" || order.status === "UNDERWAY(F)");
+    },
+    filterend() {
+      this.flag = false;
+      this.filteredOrders = this.orders.filter(order => order.status === "END(P)" || order.status === "END(F)");
+    },
+    filterReady() {
+      this.flag = false;
+      this.filteredOrders = this.orders.filter(order => order.status === "LabReady(P)" || order.status === "LabReady(F)");
+    },
   },
-  filterTableName() {
-    if (!this.searchTerm) {
-      // If search term is empty, show all orders
-      this.filteredOrders = this.orders;
-      return;
-    }
-    const searchTermLowerCase = this.searchTerm.toLowerCase();
-    if (this.selectedField === "id") {
-      this.filteredOrders = this.orders.filter(order =>
-        String(order.UID).includes(this.searchTerm)
-      );
-    } else if (this.selectedField === "name") {
-      this.filteredOrders = this.orders.filter(order =>
-        order.patientName && order.patientName.toLowerCase().includes(searchTermLowerCase)
-      );
-    } else if (this.selectedField === "doctor") {
-      this.filteredOrders = this.orders.filter(order =>
-        order.doc_id.username && order.doc_id.username.toLowerCase().includes(searchTermLowerCase)
-      );
-    }
-  },
-  filterAll() {
-    this.flag = true,
-    this.filteredOrders = this.orders;
-  },
-  filterunderway() {
-    this.flag = false;
-    this.filteredOrders = this.orders.filter(order => order.status === "UNDERWAY(P)"||order.status === "UNDERWAY(F)");
-  },
-  filterend() {
-    this.flag = false;
-    this.filteredOrders = this.orders.filter(order => order.status === "END(P)" || order.status === "END(F)");
-  },
-  filterReady() {
-    this.flag = false;
-    this.filteredOrders = this.orders.filter(order => order.status === "LabReady(P)" || order.status === "LabReady(F)");
-  },
-},
 
   mounted() {
     const username = localStorage.getItem('username');
     if (username !== '' && username !== null) {
-      this.fetchData();
       setInterval(() => {
         this.fetchData();
       }, 60000);
     }
   },
-  created(){
+  created() {
     const isSubscribed = localStorage.getItem('delSub') === 'true';
     this.message_sub = isSubscribed ? 'Unsubscribe from Delivery' : 'Subscribe in Delivery';
-    this.filterAll();
-    },
+    axios.get('https://dentist-backend-ts43.onrender.com/labs/orders', {
+      headers: {
+        'Authorization': 'DEN ' + localStorage.getItem('token')
+      }
+    }).then(response => {
+      this.orders = response.data.reverse();
+      this.filteredOrders = this.orders;
+    })
+  },
 };
 </script>
 
 <style scoped>
 .green-row {
-    background-color: lightgreen;
+  background-color: lightgreen;
 }
+
 .sidebar {
   margin: 0;
   padding: 0;
@@ -402,8 +411,8 @@ markOrder(orderId) {
   transition: 0.5s;
 }
 
-.status{
-  color:#33a1f1;
+.status {
+  color: #33a1f1;
 }
 
 .sidebar a {
@@ -598,21 +607,22 @@ table {
 
 
 @media only screen and (max-width: 840px) {
-    .sidebar{
-      margin-top: 80px;
-    }
+  .sidebar {
+    margin-top: 80px;
+  }
 
-    table{
-      margin-right: 100px;
-      margin-right: -180px;
-    }
+  table {
+    margin-right: 100px;
+    margin-right: -180px;
+  }
 }
+
 @media only screen and (max-width: 426px) {
-  .sidebar{
+  .sidebar {
     margin-top: 0;
   }
 
-  table{
+  table {
     margin-right: -680px;
   }
 }

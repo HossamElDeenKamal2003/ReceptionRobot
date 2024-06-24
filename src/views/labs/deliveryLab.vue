@@ -93,11 +93,14 @@ export default {
                             case 401:
                                 alert(error.response.data);
                                 break;
+                            case 500:
+                                alert('Check your internet connection');
+                                break;
                             default:
                                 alert('An error occurred: ' + error.message);
                         }
                     } else {
-                        alert('Check your internet connection');
+                        console.log(error);
                     }
                 });
             } else {

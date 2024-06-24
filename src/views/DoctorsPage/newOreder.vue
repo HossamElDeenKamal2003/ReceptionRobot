@@ -88,7 +88,7 @@
                 <div class="teethImage" style="width:100%; margin-top:2%;">
                     <img src="@/assets/illustrateTeethimage.png" alt="Teeth Image" width="100%" height="50%">
                     <label>Requirments</label>
-                    <textarea name="" id="" style="overflow:auto; width:100%; height: 25%" v-model="note"></textarea>
+                    <textarea name="" id="" style="overflow:auto; width:100%; height: 25%" v-model="note" @input="formatNote"></textarea>
                     <div class="container">
                         <div class="display">
                             <p>{{ message }}</p>
@@ -157,6 +157,9 @@ export default {
         };
     },
     methods: {
+        formatNote() {
+            this.note = this.note.replace(/(\d+)\s/g, '$1, ');
+        },
         handleCheckboxChange() {
             if (this.checkboxChecked) {
                 this.prov = false;
