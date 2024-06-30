@@ -557,6 +557,11 @@ textarea {
         float: left;
     }
 
+    .sub{
+        position: relative;
+        left: 0;
+    }
+
     .content {
         height: 90vh;
         overflow: auto;
@@ -575,16 +580,10 @@ textarea {
     .teethImage img {
         height: 60%;
     }
+
 }
 
 @media screen and (max-width: 1023px) {
-    .printer {
-        bottom: -60px;
-    }
-
-    .sub {
-        bottom: -100px;
-    }
 
     .content {
         height: 50vh;
